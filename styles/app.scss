@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --content-gutter: clamp(1.125rem, 6vw, 4.5rem);
+}
+
+.content {
+  padding-inline: var(--content-gutter);
+}
+
+@media (max-width: 620px) {
+  .content {
+    padding-inline: 1.125rem;
+  }
+}

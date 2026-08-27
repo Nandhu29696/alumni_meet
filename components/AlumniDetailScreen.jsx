@@ -1,0 +1,5 @@
+function initials(name = '') { return name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase(); }
+
+export default function AlumniDetailScreen({ person, onBack }) {
+  return <div className="profile-screen"><button className="back-button" onClick={onBack}>← Back to directory</button><div className="profile-cover" style={person.cover_image ? { backgroundImage: `url(${person.cover_image})` } : undefined} /><div className="person-detail-header"><div className="avatar avatar-profile">{person.avatar_image ? <img src={person.avatar_image} alt={person.name} /> : initials(person.name)}</div><div><span className="section-kicker">ALUMNI PROFILE</span><h2>{person.name}</h2><p>{person.job_title || 'Alumni member'}{person.current_company ? ` at ${person.current_company}` : ''}</p></div></div><div className="profile-detail-copy"><span>Class of {person.batch_year || '—'}</span><span>{person.location || 'India'}</span><p>{person.bio || 'This alumni member has not added a bio yet.'}</p></div></div>;
+}
