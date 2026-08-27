@@ -30,7 +30,7 @@ body {
   background: #eef1e9;
   flex-direction: column;
   flex-shrink: 0;
-  width: 248px;
+  width: 260px;
   padding: 31px 20px 24px;
   display: flex;
 }
@@ -50,8 +50,6 @@ body {
 }
 
 .brand-mark {
-  background: var(--green);
-  color: #fff;
   letter-spacing: -1px;
   border-radius: 50%;
   place-items: center;
@@ -141,7 +139,6 @@ body {
 
 .content {
   width: 100%;
-  max-width: 1240px;
   margin: 0 auto;
   padding: 39px 6vw 70px;
 }

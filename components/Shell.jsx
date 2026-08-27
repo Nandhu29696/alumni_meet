@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
+const SCHOOL_NAME = 'ST. PHILOMENA\'S HIGH SCHOOL';
+const SCHOOL_SUBTITLE = 'Alumni Association';
+const SCHOOL_LOGO = '/school-logo.png';
+
 export function ProfileMenu({ user, onProfile, onSignOut }) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
@@ -14,15 +18,26 @@ export function ProfileMenu({ user, onProfile, onSignOut }) {
 
 export default function Shell({ children, active, setActive, navTabs }) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [logoError, setLogoError] = useState(false);
     const mobileTabs = navTabs.filter(([item]) => ['Overview', 'Alumni directory', 'Events', 'My events', 'My profile'].includes(item));
     function selectTab(item) { setActive(item); setMenuOpen(false); }
+
+    const brandNode = <>
+        <span className={logoError ? 'brand-mark' : 'brand-mark brand-mark-logo'}>
+            {logoError ? 'AM' : <img src={SCHOOL_LOGO} alt="St. Philomena's High School logo"
+                onError={() => setLogoError(true)} />}
+        </span>
+        <span className="brand-text">
+            <strong>{SCHOOL_NAME}</strong>
+            <small>{SCHOOL_SUBTITLE}</small>
+        </span>
+    </>;
+
     return <main className="shell">
         <aside className={menuOpen ? 'sidebar menu-open' : 'sidebar'}>
             <div className="mobile-nav-header">
-                <div className="brand">
-                    <span className="brand-mark">AM</span>
-                    <span>Alumni<br /><strong>Meet</strong>
-                    </span>
+                <div className="brand school-brand mobile-school-brand">
+                    {brandNode}
                 </div>
                 <button type="button" className="menu-button"
                     onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen}
@@ -30,10 +45,8 @@ export default function Shell({ children, active, setActive, navTabs }) {
                     <span aria-hidden="true">{menuOpen ? '×' : '☰'}</span>
                 </button>
             </div>
-            <div className="desktop-brand brand">
-                <span className="brand-mark">AM</span>
-                <span>Alumni<br /><strong>Meet</strong>
-                </span>
+            <div className="desktop-brand brand school-brand">
+                {brandNode}
             </div>
             <p className="eyebrow">YOUR COMMUNITY</p>
             <nav aria-label="Main navigation">{navTabs.map(([item, icon]) =>

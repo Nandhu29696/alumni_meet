@@ -280,7 +280,7 @@ function normalizeApiBase(value) {
         return fallback;
     }
 }
-const API_URL = normalizeApiBase(("TURBOPACK compile-time value", "https://alumnibackendapi.vercel.app/api"));
+const API_URL = normalizeApiBase(("TURBOPACK compile-time value", "http://localhost:8000/api"));
 async function apiRequest(path, options = {}) {
     const { _retried, ...requestOptions } = options;
     const method = (options.method || 'GET').toUpperCase();

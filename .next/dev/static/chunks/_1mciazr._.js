@@ -1,0 +1,508 @@
+(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/app/check-in/page.jsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>CheckInPage
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/services/api.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+function CheckInPage() {
+    _s();
+    const [state, setState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        loading: true,
+        result: null,
+        error: ''
+    });
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "CheckInPage.useEffect": ()=>{
+            const token = new URLSearchParams(window.location.search).get('token');
+            if (!token) {
+                setState({
+                    loading: false,
+                    result: null,
+                    error: 'This QR code does not contain a registration token.'
+                });
+                return;
+            }
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["checkIn"])(token).then({
+                "CheckInPage.useEffect": (result)=>setState({
+                        loading: false,
+                        result,
+                        error: ''
+                    })
+            }["CheckInPage.useEffect"]).catch({
+                "CheckInPage.useEffect": (error)=>setState({
+                        loading: false,
+                        result: null,
+                        error: error.message || 'Unable to verify this registration.'
+                    })
+            }["CheckInPage.useEffect"]);
+        }
+    }["CheckInPage.useEffect"], []);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+        className: "auth-shell",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+            className: "auth-card check-in-card",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "auth-logo",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "auth-logo-mark",
+                            children: "AM"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 23,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            children: [
+                                "Alumni",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
+                                    fileName: "[project]/app/check-in/page.jsx",
+                                    lineNumber: 24,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    children: "Meet"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/check-in/page.jsx",
+                                    lineNumber: 24,
+                                    columnNumber: 35
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 24,
+                            columnNumber: 17
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/check-in/page.jsx",
+                    lineNumber: 22,
+                    columnNumber: 13
+                }, this),
+                state.loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            children: "Verifying entry"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 28,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            children: "Checking the registration and attendee details."
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 29,
+                            columnNumber: 17
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/check-in/page.jsx",
+                    lineNumber: 27,
+                    columnNumber: 30
+                }, this) : state.result ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            children: "Attendance confirmed"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 31,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    children: state.result.attendee?.name
+                                }, void 0, false, {
+                                    fileName: "[project]/app/check-in/page.jsx",
+                                    lineNumber: 33,
+                                    columnNumber: 21
+                                }, this),
+                                " is checked in for",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    children: state.result.event_title
+                                }, void 0, false, {
+                                    fileName: "[project]/app/check-in/page.jsx",
+                                    lineNumber: 34,
+                                    columnNumber: 21
+                                }, this),
+                                "."
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 32,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "check-in-success",
+                            children: "Status: Attended"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 35,
+                            columnNumber: 17
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/check-in/page.jsx",
+                    lineNumber: 30,
+                    columnNumber: 34
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            children: "Unable to check in"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 37,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "auth-error",
+                            children: state.error
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 38,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            children: "Sign in as an administrator and scan the QR code again."
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 39,
+                            columnNumber: 17
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/check-in/page.jsx",
+                    lineNumber: 36,
+                    columnNumber: 19
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/check-in/page.jsx",
+            lineNumber: 21,
+            columnNumber: 9
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/check-in/page.jsx",
+        lineNumber: 20,
+        columnNumber: 12
+    }, this);
+}
+_s(CheckInPage, "SXswFVL/+fQDDUeY3gWx+uwngUI=");
+_c = CheckInPage;
+var _c;
+__turbopack_context__.k.register(_c, "CheckInPage");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/services/api.js [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "adminEvents",
+    ()=>adminEvents,
+    "adminPeople",
+    ()=>adminPeople,
+    "apiRequest",
+    ()=>apiRequest,
+    "cancelRsvp",
+    ()=>cancelRsvp,
+    "changePassword",
+    ()=>changePassword,
+    "checkIn",
+    ()=>checkIn,
+    "deleteEvent",
+    ()=>deleteEvent,
+    "deletePerson",
+    ()=>deletePerson,
+    "downloadAttendanceCsv",
+    ()=>downloadAttendanceCsv,
+    "getAlumni",
+    ()=>getAlumni,
+    "getAlumniProfile",
+    ()=>getAlumniProfile,
+    "getAnalytics",
+    ()=>getAnalytics,
+    "getAttendance",
+    ()=>getAttendance,
+    "getEvent",
+    ()=>getEvent,
+    "getEvents",
+    ()=>getEvents,
+    "getMyEvents",
+    ()=>getMyEvents,
+    "login",
+    ()=>login,
+    "logout",
+    ()=>logout,
+    "refreshSession",
+    ()=>refreshSession,
+    "registerAccount",
+    ()=>registerAccount,
+    "requestPasswordOtp",
+    ()=>requestPasswordOtp,
+    "resetPassword",
+    ()=>resetPassword,
+    "rsvp",
+    ()=>rsvp,
+    "updateEvent",
+    ()=>updateEvent,
+    "updatePerson",
+    ()=>updatePerson,
+    "updateProfile",
+    ()=>updateProfile,
+    "uploadEventBanner",
+    ()=>uploadEventBanner,
+    "uploadProfileImages",
+    ()=>uploadProfileImages
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/utils/auth.js [app-client] (ecmascript)");
+;
+function normalizeApiBase(value) {
+    const fallback = 'https://alumnibackendapi.vercel.app/api';
+    const raw = (value || fallback).trim();
+    try {
+        const url = new URL(raw);
+        let path = (url.pathname || '').replace(/\/+$/, '');
+        path = path.replace(/\/auth\/login$/i, '');
+        if (!path || path === '/') path = '/api';
+        return `${url.origin}${path}`;
+    } catch  {
+        return fallback;
+    }
+}
+const API_URL = normalizeApiBase(("TURBOPACK compile-time value", "http://localhost:8000/api"));
+async function apiRequest(path, options = {}) {
+    const { _retried, ...requestOptions } = options;
+    const method = (options.method || 'GET').toUpperCase();
+    const accessToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAccessToken"])();
+    let csrfToken = typeof document !== 'undefined' ? document.cookie.split('; ').find((item)=>item.startsWith('csrftoken='))?.split('=')[1] : null;
+    if (("TURBOPACK compile-time value", "object") !== 'undefined' && method !== 'GET' && !csrfToken) {
+        const csrfResponse = await fetch(`${API_URL}/auth/csrf/`, {
+            credentials: 'include'
+        });
+        const csrfData = await csrfResponse.json();
+        csrfToken = csrfData.csrfToken;
+    }
+    const isFormData = typeof FormData !== 'undefined' && requestOptions.body instanceof FormData;
+    const response = await fetch(`${API_URL}${path}`, {
+        ...requestOptions,
+        credentials: 'include',
+        headers: {
+            ...isFormData ? {} : {
+                'Content-Type': 'application/json'
+            },
+            ...csrfToken ? {
+                'X-CSRFToken': csrfToken
+            } : {},
+            ...accessToken ? {
+                Authorization: `Bearer ${accessToken}`
+            } : {},
+            ...requestOptions.headers
+        }
+    });
+    if (response.status === 401 && !_retried && path !== '/auth/refresh/') {
+        const refreshToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getRefreshToken"])();
+        const refreshResponse = await fetch(`${API_URL}/auth/refresh/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                ...csrfToken ? {
+                    'X-CSRFToken': csrfToken
+                } : {},
+                'Content-Type': 'application/json',
+                ...refreshToken ? {
+                    Authorization: `Bearer ${refreshToken}`
+                } : {}
+            },
+            body: JSON.stringify(refreshToken ? {
+                refresh_token: refreshToken
+            } : {})
+        });
+        if (refreshResponse.ok) {
+            const refreshed = await refreshResponse.json().catch(()=>({}));
+            if (refreshed.access_token || refreshed.refresh_token) {
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setSession"])({
+                    access_token: refreshed.access_token || accessToken,
+                    refresh_token: refreshed.refresh_token || refreshToken
+                });
+            }
+            return apiRequest(path, {
+                ...requestOptions,
+                _retried: true
+            });
+        }
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clearSession"])();
+    }
+    if (response.status === 204 || response.status === 205) {
+        return {};
+    }
+    const contentType = response.headers?.get?.('content-type') || '';
+    const hasJsonReader = typeof response.json === 'function';
+    const hasTextReader = typeof response.text === 'function';
+    const isJson = contentType.includes('application/json') || hasJsonReader && !hasTextReader;
+    const data = isJson ? await response.json().catch(()=>({})) : hasTextReader ? await response.text() : {};
+    if (!response.ok) {
+        if (isJson && data && typeof data === 'object') throw new Error(data.detail || 'Request failed');
+        throw new Error(typeof data === 'string' && data.trim() || 'Request failed');
+    }
+    return isJson ? data : {
+        value: data
+    };
+}
+async function refreshSession() {
+    const refreshed = await apiRequest('/auth/refresh/', {
+        method: 'POST'
+    });
+    if (refreshed.access_token || refreshed.refresh_token) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setSession"])({
+            access_token: refreshed.access_token || (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAccessToken"])(),
+            refresh_token: refreshed.refresh_token || (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getRefreshToken"])()
+        });
+    }
+    return refreshed;
+}
+async function login(credentials) {
+    const result = await apiRequest('/auth/login/', {
+        method: 'POST',
+        body: JSON.stringify(credentials)
+    });
+    if (result.access_token || result.refresh_token) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setSession"])({
+            access_token: result.access_token || null,
+            refresh_token: result.refresh_token || null
+        });
+    }
+    return result;
+}
+const requestPasswordOtp = (email)=>apiRequest('/auth/password/forgot/', {
+        method: 'POST',
+        body: JSON.stringify({
+            email
+        })
+    });
+const resetPassword = (details)=>apiRequest('/auth/password/reset/', {
+        method: 'POST',
+        body: JSON.stringify(details)
+    });
+const changePassword = (details)=>apiRequest('/auth/password/change/', {
+        method: 'POST',
+        body: JSON.stringify(details)
+    });
+async function registerAccount(details) {
+    return apiRequest('/auth/register/', {
+        method: 'POST',
+        body: JSON.stringify(details)
+    });
+}
+const logout = async ()=>{
+    try {
+        return await apiRequest('/auth/logout/', {
+            method: 'POST'
+        });
+    } finally{
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clearSession"])();
+    }
+};
+const getEvents = (params = {})=>{
+    const query = new URLSearchParams(Object.entries(params).filter(([, value])=>value));
+    return apiRequest(`/events/${query.toString() ? `?${query}` : ''}`);
+};
+const getEvent = (eventId)=>apiRequest(`/events/${eventId}/`);
+const getAlumni = (page = 1)=>apiRequest(`/alumni/?page=${page}`);
+const getAlumniProfile = (personId)=>apiRequest(`/alumni/${personId}/`);
+const rsvp = (eventId)=>apiRequest(`/events/${eventId}/register/`, {
+        method: 'POST'
+    });
+const cancelRsvp = (eventId)=>apiRequest(`/events/${eventId}/register/`, {
+        method: 'POST',
+        body: JSON.stringify({
+            status: 'cancelled'
+        })
+    });
+const getMyEvents = ()=>apiRequest('/my-events/');
+const getAttendance = ()=>apiRequest('/admin/attendance/');
+const getAnalytics = ()=>apiRequest('/admin/analytics/');
+const updatePerson = (personId, person)=>apiRequest(`/admin/people/${personId}/`, {
+        method: 'PUT',
+        body: JSON.stringify(person)
+    });
+async function downloadAttendanceCsv() {
+    const response = await fetch(`${API_URL}/admin/attendance/?download=csv`, {
+        credentials: 'include'
+    });
+    if (!response.ok) {
+        const data = await response.json().catch(()=>({}));
+        throw new Error(data.detail || 'Attendance export failed');
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'attendance.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+}
+const checkIn = (token)=>apiRequest('/admin/events/check-in/', {
+        method: 'POST',
+        body: JSON.stringify({
+            token
+        })
+    });
+const updateProfile = (profile)=>apiRequest('/auth/profile/', {
+        method: 'PUT',
+        body: JSON.stringify(profile)
+    });
+const uploadProfileImages = (files)=>{
+    const form = new FormData();
+    Object.entries(files).forEach(([name, file])=>{
+        if (file) form.append(name, file);
+    });
+    return apiRequest('/auth/profile/images/', {
+        method: 'POST',
+        body: form
+    });
+};
+const adminPeople = ()=>apiRequest('/admin/people/');
+const adminEvents = (event)=>apiRequest('/events/', {
+        method: 'POST',
+        body: JSON.stringify(event)
+    });
+const updateEvent = (eventId, event)=>apiRequest(`/admin/events/${eventId}/`, {
+        method: 'PUT',
+        body: JSON.stringify(event)
+    });
+const uploadEventBanner = (file)=>{
+    const form = new FormData();
+    form.append('banner_image', file);
+    return apiRequest('/admin/events/upload-banner/', {
+        method: 'POST',
+        body: form
+    });
+};
+const deleteEvent = (eventId)=>apiRequest(`/admin/events/${eventId}/`, {
+        method: 'DELETE'
+    });
+const deletePerson = (personId)=>apiRequest(`/admin/people/${personId}/`, {
+        method: 'DELETE'
+    });
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+]);
+
+//# sourceMappingURL=_1mciazr._.js.map
