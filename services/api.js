@@ -1,3 +1,5 @@
+import { clearSession, getAccessToken, getRefreshToken, setSession } from '../utils/auth';
+
 function normalizeApiBase(value) {
   const fallback = 'https://alumnibackendapi.vercel.app/api';
   const raw = (value || fallback).trim();
@@ -17,6 +19,7 @@ const API_URL = normalizeApiBase(process.env.NEXT_PUBLIC_API_URL);
 export async function apiRequest(path, options = {}) {
   const { _retried, ...requestOptions } = options;
   const method = (options.method || 'GET').toUpperCase();
+  const accessToken = getAccessToken();
   let csrfToken = typeof document !== 'undefined' ? document.cookie.split('; ').find((item) => item.startsWith('csrftoken='))?.split('=')[1] : null;
   if (typeof window !== 'undefined' && method !== 'GET' && !csrfToken) {
     const csrfResponse = await fetch(`${API_URL}/auth/csrf/`, { credentials: 'include' });
@@ -27,18 +30,37 @@ export async function apiRequest(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
     ...requestOptions,
     credentials: 'include',
-    headers: { ...(isFormData ? {} : { 'Content-Type': 'application/json' }), ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}), ...requestOptions.headers }
+    headers: {
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...requestOptions.headers
+    }
   });
 
   if (response.status === 401 && !_retried && path !== '/auth/refresh/') {
+    const refreshToken = getRefreshToken();
     const refreshResponse = await fetch(`${API_URL}/auth/refresh/`, {
       method: 'POST',
       credentials: 'include',
-      headers: csrfToken ? { 'X-CSRFToken': csrfToken } : undefined
+      headers: {
+        ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
+        'Content-Type': 'application/json',
+        ...(refreshToken ? { Authorization: `Bearer ${refreshToken}` } : {}),
+      },
+      body: JSON.stringify(refreshToken ? { refresh_token: refreshToken } : {})
     });
     if (refreshResponse.ok) {
+      const refreshed = await refreshResponse.json().catch(() => ({}));
+      if (refreshed.access_token || refreshed.refresh_token) {
+        setSession({
+          access_token: refreshed.access_token || accessToken,
+          refresh_token: refreshed.refresh_token || refreshToken,
+        });
+      }
       return apiRequest(path, { ...requestOptions, _retried: true });
     }
+    clearSession();
   }
 
   if (response.status === 204 || response.status === 205) {
@@ -64,12 +86,22 @@ export async function apiRequest(path, options = {}) {
 }
 
 export async function refreshSession() {
-  return apiRequest('/auth/refresh/', { method: 'POST' });
+  const refreshed = await apiRequest('/auth/refresh/', { method: 'POST' });
+  if (refreshed.access_token || refreshed.refresh_token) {
+    setSession({
+      access_token: refreshed.access_token || getAccessToken(),
+      refresh_token: refreshed.refresh_token || getRefreshToken(),
+    });
+  }
+  return refreshed;
 }
 
 export async function login(credentials) {
-  return apiRequest('/auth/login/',
-    { method: 'POST', body: JSON.stringify(credentials) });
+  const result = await apiRequest('/auth/login/', { method: 'POST', body: JSON.stringify(credentials) });
+  if (result.access_token || result.refresh_token) {
+    setSession({ access_token: result.access_token || null, refresh_token: result.refresh_token || null });
+  }
+  return result;
 }
 
 export const requestPasswordOtp = (email) => apiRequest('/auth/password/forgot/', { method: 'POST', body: JSON.stringify({ email }) });
@@ -80,7 +112,13 @@ export async function registerAccount(details) {
   return apiRequest('/auth/register/', { method: 'POST', body: JSON.stringify(details) });
 }
 
-export const logout = () => apiRequest('/auth/logout/', { method: 'POST' });
+export const logout = async () => {
+  try {
+    return await apiRequest('/auth/logout/', { method: 'POST' });
+  } finally {
+    clearSession();
+  }
+};
 
 export const getEvents = (params = {}) => {
   const query = new URLSearchParams(

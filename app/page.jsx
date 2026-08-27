@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   apiRequest,
   adminEvents,
@@ -34,6 +35,8 @@ import Overview from '../components/Overview';
 import ProfileScreen from '../components/ProfileScreen';
 import Shell, { ProfileMenu } from '../components/Shell';
 import ToastStack from '../components/ToastStack';
+import { clearAuth, setTokens, setUser as setAuthUser } from '../store/authSlice';
+import { getAccessToken, getRefreshToken } from '../utils/auth';
 
 const tabs = [['Overview', '◒'], ['Alumni directory', '◌'], ['Events', '▣'], ['My events', '□'], ['My profile', '◉']];
 
@@ -55,6 +58,7 @@ function errorMessage(error, fallback) {
 }
 
 export default function Home() {
+  const dispatch = useDispatch();
   const [active, setActive] = useState('Overview');
   const [query, setQuery] = useState('');
   const [people, setPeople] = useState([]);
@@ -109,11 +113,14 @@ export default function Home() {
         try {
           profile = await apiRequest('/auth/profile/');
         } catch {
-          await refreshSession();
+          const refreshed = await refreshSession();
+          dispatch(setTokens({ access_token: refreshed.access_token, refresh_token: refreshed.refresh_token || getRefreshToken() }));
           profile = await apiRequest('/auth/profile/');
         }
 
         setUser(profile);
+        dispatch(setAuthUser(profile));
+        dispatch(setTokens({ access_token: getAccessToken(), refresh_token: getRefreshToken() }));
         if (profile.role === 'admin' || profile.role === 'super_admin') {
           const [attendanceData, analyticsData] = await Promise.all([getAttendance(), getAnalytics()]);
           setAttendance(attendanceData.results);
@@ -375,7 +382,7 @@ export default function Home() {
             </div>
             <div className="top-actions">
               <ProfileMenu user={user} onProfile={() => setActive('My profile')} onSignOut={async () => {
-                try { await logout(); } finally { window.location.assign('/login'); }
+                try { await logout(); } finally { dispatch(clearAuth()); window.location.assign('/login'); }
               }} />
             </div>
           </header>

@@ -2,6 +2,7 @@ import './globals.css';
 import './screens.css';
 import '../styles/app.scss';
 import './enhancements.css';
+import Providers from './providers';
 
 export const metadata = {
   title: 'Alumni Meet',
@@ -11,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body><Providers>{children}</Providers></body>
     </html>
   );
 }

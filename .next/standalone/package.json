@@ -9,10 +9,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.9.0",
     "html5-qrcode": "^2.3.8",
     "next": "^16.3.3",
     "react": "^19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

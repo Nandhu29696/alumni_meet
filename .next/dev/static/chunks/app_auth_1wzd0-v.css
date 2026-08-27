@@ -1,0 +1,110 @@
+/* [project]/app/auth.css [app-client] (css) */
+.forgot-link {
+  text-align: right;
+  color: #315a45;
+  margin-top: -6px;
+  font: 700 11px DM Sans;
+  text-decoration: none;
+  display: block;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.auth-shell {
+  background: linear-gradient(135deg, #eef1e9 0%, #f7f8f3 55%, #f1e5d7 100%);
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  display: grid;
+}
+
+.auth-card {
+  background: #fff;
+  border: 1px solid #e5e8df;
+  width: min(430px, 100%);
+  padding: 38px;
+  box-shadow: 0 18px 50px #20252114;
+}
+
+.auth-card h1 {
+  margin: 20px 0 8px;
+  font: 600 34px Playfair Display;
+}
+
+.auth-card p {
+  color: #727870;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.auth-card form {
+  gap: 14px;
+  margin-top: 25px;
+  display: grid;
+}
+
+.auth-card label {
+  color: #727870;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.auth-card input {
+  border: 1px solid #dfe4da;
+  outline-color: #315a45;
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  font: 13px DM Sans;
+  display: block;
+}
+
+.auth-submit {
+  color: #fff;
+  cursor: pointer;
+  background: #315a45;
+  border: 0;
+  margin-top: 8px;
+  padding: 13px;
+  font: 700 12px DM Sans;
+}
+
+.auth-error {
+  color: #b34f3c !important;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 22px;
+  font-weight: 700;
+  display: block;
+  color: #315a45 !important;
+}
+
+.auth-logo {
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  line-height: 1.05;
+  display: flex;
+}
+
+.auth-logo strong {
+  font-weight: 700;
+}
+
+.auth-logo-mark {
+  color: #fff;
+  background: #315a45;
+  border-radius: 50%;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+}
+
+/*# sourceMappingURL=app_auth_1wzd0-v.css.map*/
