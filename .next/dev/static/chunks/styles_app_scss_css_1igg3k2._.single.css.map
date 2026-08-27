@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///D:/Suga S AI Tech/alumni_meet/frontend/styles/app.scss"],"sourcesContent":["@tailwind base;\r\n@tailwind components;\r\n@tailwind utilities;\r\n\r\n:root {\r\n  --content-gutter: clamp(1.125rem, 6vw, 4.5rem);\r\n}\r\n\r\n.content {\r\n  padding-inline: var(--content-gutter);\r\n}\r\n\r\n@media (max-width: 620px) {\r\n  .content {\r\n    padding-inline: 1.125rem;\r\n  }\r\n}\r\n"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;;;AAAA;;;;AAAA;;;;;;;;;;AAAA;;;;;AAAA;;;;;;AAAA;;;;;AAAA;;;;;AAAA;;;;;;AAAA;;;;AAAA;;;;;;;AAAA;;;;AAAA;;;;;;;AAAA;;;;AAAA;;;;AAAA;;;;;;AAAA;;;;;;;;;;;;;AAAA;;;;AAAA;;;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;;AAAA;;;;AAAA;;;;;AAAA;;;;AAAA;;;;AAAA;;;;;AAAA;;;;AAAA;;;;;;AAAA;;;;AAAA;;;;AAAA;;;;;AAAA;;;;;AAAA;;;;;AAAA;;;;AAAA;;;;AAAA;;;;;AAAA;;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;;;;AAAA;EAAA"}}]
-}
