@@ -1,56 +1,12 @@
-{"timestamp":"00:00:02.827","source":"Server","level":"WARN","message":"⚠ Slow filesystem detected. The benchmark took 304ms. If \\\\?\\D:\\Suga S AI Tech\\alumni_meet\\frontend\\.next\\dev is a network drive, consider moving it to a local folder.\nSee more: https://nextjs.org/docs/app/guides/local-development"}
-{"timestamp":"00:00:03.783","source":"Server","level":"LOG","message":""}
-{"timestamp":"00:00:06.462","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:01:06.119","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:05:37.705","source":"Server","level":"LOG","message":"✓ Compiled in 57ms"}
-{"timestamp":"00:05:48.513","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:07:21.455","source":"Server","level":"LOG","message":"✓ Compiled in 50ms"}
-{"timestamp":"00:07:25.744","source":"Server","level":"LOG","message":"✓ Compiled in 41ms"}
-{"timestamp":"00:07:28.162","source":"Server","level":"LOG","message":"✓ Compiled in 135ms"}
-{"timestamp":"00:07:29.997","source":"Server","level":"LOG","message":"✓ Compiled in 46ms"}
-{"timestamp":"00:07:31.112","source":"Server","level":"LOG","message":"✓ Compiled in 52ms"}
-{"timestamp":"00:09:33.014","source":"Server","level":"LOG","message":"✓ Compiled in 88ms"}
-{"timestamp":"00:09:39.785","source":"Server","level":"LOG","message":"✓ Compiled in 91ms"}
-{"timestamp":"00:11:11.916","source":"Server","level":"LOG","message":"✓ Compiled in 63ms"}
-{"timestamp":"00:11:15.047","source":"Server","level":"LOG","message":"✓ Compiled in 26ms"}
-{"timestamp":"00:11:53.629","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:12:19.328","source":"Server","level":"LOG","message":"✓ Compiled in 36ms"}
-{"timestamp":"00:13:12.502","source":"Server","level":"LOG","message":"✓ Compiled in 297ms"}
-{"timestamp":"00:13:38.687","source":"Server","level":"LOG","message":"✓ Compiled in 119ms"}
-{"timestamp":"00:13:43.155","source":"Server","level":"LOG","message":"✓ Compiled in 23ms"}
-{"timestamp":"00:13:44.153","source":"Server","level":"LOG","message":"✓ Compiled in 53ms"}
-{"timestamp":"00:14:00.592","source":"Server","level":"LOG","message":"✓ Compiled in 32ms"}
-{"timestamp":"00:14:02.612","source":"Server","level":"LOG","message":"✓ Compiled in 42ms"}
-{"timestamp":"00:14:25.461","source":"Server","level":"LOG","message":"✓ Compiled in 21ms"}
-{"timestamp":"00:14:27.106","source":"Server","level":"LOG","message":"✓ Compiled in 28ms"}
-{"timestamp":"00:14:29.298","source":"Server","level":"LOG","message":"✓ Compiled in 22ms"}
-{"timestamp":"00:14:59.540","source":"Server","level":"LOG","message":"✓ Compiled in 27ms"}
-{"timestamp":"00:15:03.741","source":"Server","level":"LOG","message":"✓ Compiled in 24ms"}
-{"timestamp":"00:15:22.080","source":"Server","level":"LOG","message":"✓ Compiled in 21ms"}
-{"timestamp":"00:15:24.867","source":"Server","level":"LOG","message":"✓ Compiled in 26ms"}
-{"timestamp":"00:15:30.091","source":"Server","level":"LOG","message":"✓ Compiled in 20ms"}
-{"timestamp":"00:16:28.341","source":"Server","level":"LOG","message":"✓ Compiled in 16ms"}
-{"timestamp":"00:17:06.481","source":"Server","level":"LOG","message":"✓ Compiled in 21ms"}
-{"timestamp":"00:33:11.179","source":"Server","level":"LOG","message":"✓ Compiled in 30ms"}
-{"timestamp":"00:34:39.787","source":"Server","level":"LOG","message":"✓ Compiled in 64ms"}
-{"timestamp":"00:48:47.665","source":"Server","level":"LOG","message":"✓ Compiled in 96ms"}
-{"timestamp":"00:48:47.999","source":"Server","level":"ERROR","message":"⨯ ReferenceError: SCHOOL_LOGO is not defined"}
-{"timestamp":"00:48:48.057","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: SCHOOL_LOGO is not defined\n    at Shell (components/Shell.jsx:27:43)\n    at Set.forEach (<anonymous>)\n    at Home (app/page.jsx:376:7)\n  \u001b[90m25 |\u001b[0m ... brandNode = <>\n  \u001b[90m26 |\u001b[0m ...span className={logoError ? \u001b[32m'brand-mark'\u001b[0m : \u001b[32m'brand-mark brand-mark-...\u001b[0m\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m27 |\u001b[0m ...   {logoError ? \u001b[32m'AM'\u001b[0m : <img src={\u001b[33mSCHOOL_LOGO\u001b[0m} alt=\u001b[32m\"St. Philomena's...\u001b[0m\n  \u001b[90m   |\u001b[0m                                     \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m28 |\u001b[0m ...       onError={() => setLogoError(\u001b[36mtrue\u001b[0m)} />}\n  \u001b[90m29 |\u001b[0m .../span>\n  \u001b[90m30 |\u001b[0m ...span className=\u001b[32m\"brand-text\"\u001b[0m>"}
-{"timestamp":"00:48:48.057","source":"Server","level":"ERROR","message":"[browser] \"\\u001b[31mUncaught ReferenceError: SCHOOL_LOGO is not defined\\u001b[39m\\n\\u001b[31m    at Shell (components/Shell.jsx:27:43)\\n    at Set.forEach (<anonymous>)\\n    at Home (app/page.jsx:376:7)\\u001b[39m\\n  \\u001b[90m25 |\\u001b[0m ... brandNode = <>\\n  \\u001b[90m26 |\\u001b[0m ...span className={logoError ? \\u001b[32m'brand-mark'\\u001b[0m : \\u001b[32m'brand-mark brand-mark-...\\u001b[0m\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m27 |\\u001b[0m ...   {logoError ? \\u001b[32m'AM'\\u001b[0m : <img src={\\u001b[33mSCHOOL_LOGO\\u001b[0m} alt=\\u001b[32m\\\"St. Philomena's...\\u001b[0m\\n  \\u001b[90m   |\\u001b[0m                                     \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m28 |\\u001b[0m ...       onError={() => setLogoError(\\u001b[36mtrue\\u001b[0m)} />}\\n  \\u001b[90m29 |\\u001b[0m .../span>\\n  \\u001b[90m30 |\\u001b[0m ...span className=\\u001b[32m\\\"brand-text\\\"\\u001b[0m>\""}
-{"timestamp":"00:48:48.396","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:48:48.494","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: SCHOOL_LOGO is not defined\n    at Shell (components/Shell.jsx:27:43)\n    at Home (app/page.jsx:376:7)\n  \u001b[90m25 |\u001b[0m ... brandNode = <>\n  \u001b[90m26 |\u001b[0m ...span className={logoError ? \u001b[32m'brand-mark'\u001b[0m : \u001b[32m'brand-mark brand-mark-...\u001b[0m\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m27 |\u001b[0m ...   {logoError ? \u001b[32m'AM'\u001b[0m : <img src={\u001b[33mSCHOOL_LOGO\u001b[0m} alt=\u001b[32m\"St. Philomena's...\u001b[0m\n  \u001b[90m   |\u001b[0m                                     \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m28 |\u001b[0m ...       onError={() => setLogoError(\u001b[36mtrue\u001b[0m)} />}\n  \u001b[90m29 |\u001b[0m .../span>\n  \u001b[90m30 |\u001b[0m ...span className=\u001b[32m\"brand-text\"\u001b[0m>"}
-{"timestamp":"00:48:48.495","source":"Server","level":"ERROR","message":"[browser] \"\\u001b[31mUncaught ReferenceError: SCHOOL_LOGO is not defined\\u001b[39m\\n\\u001b[31m    at Shell (components/Shell.jsx:27:43)\\n    at Home (app/page.jsx:376:7)\\u001b[39m\\n  \\u001b[90m25 |\\u001b[0m ... brandNode = <>\\n  \\u001b[90m26 |\\u001b[0m ...span className={logoError ? \\u001b[32m'brand-mark'\\u001b[0m : \\u001b[32m'brand-mark brand-mark-...\\u001b[0m\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m27 |\\u001b[0m ...   {logoError ? \\u001b[32m'AM'\\u001b[0m : <img src={\\u001b[33mSCHOOL_LOGO\\u001b[0m} alt=\\u001b[32m\\\"St. Philomena's...\\u001b[0m\\n  \\u001b[90m   |\\u001b[0m                                     \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m28 |\\u001b[0m ...       onError={() => setLogoError(\\u001b[36mtrue\\u001b[0m)} />}\\n  \\u001b[90m29 |\\u001b[0m .../span>\\n  \\u001b[90m30 |\\u001b[0m ...span className=\\u001b[32m\\\"brand-text\\\"\\u001b[0m>\""}
-{"timestamp":"00:48:52.703","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:49:10.529","source":"Server","level":"LOG","message":"✓ Compiled in 45ms"}
-{"timestamp":"00:49:10.598","source":"Browser","level":"ERROR","message":"An empty string (\"\") was passed to the src attribute. This may cause the browser to download the whole page again over the network. To fix this, either do not render the element at all or pass null to src instead of an empty string. "}
-{"timestamp":"00:49:10.599","source":"Server","level":"ERROR","message":"[browser] \"An empty string (\\\"\\\") was passed to the src attribute. This may cause the browser to download the whole page again over the network. To fix this, either do not render the element at all or pass null to src instead of an empty string.\" \"\""}
-{"timestamp":"00:49:10.607","source":"Browser","level":"ERROR","message":"An empty string (\"\") was passed to the src attribute. This may cause the browser to download the whole page again over the network. To fix this, either do not render the element at all or pass null to src instead of an empty string. "}
-{"timestamp":"00:49:10.609","source":"Server","level":"ERROR","message":"[browser] \"An empty string (\\\"\\\") was passed to the src attribute. This may cause the browser to download the whole page again over the network. To fix this, either do not render the element at all or pass null to src instead of an empty string.\" \"\""}
-{"timestamp":"00:49:15.490","source":"Server","level":"LOG","message":"✓ Compiled in 35ms"}
-{"timestamp":"00:49:28.624","source":"Server","level":"LOG","message":"✓ Compiled in 39ms"}
-{"timestamp":"00:49:31.943","source":"Server","level":"LOG","message":"✓ Compiled in 43ms"}
-{"timestamp":"00:49:39.839","source":"Server","level":"LOG","message":"✓ Compiled in 45ms"}
-{"timestamp":"01:55:16.303","source":"Server","level":"LOG","message":"✓ Compiled in 277ms"}
-{"timestamp":"01:55:36.720","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"01:58:14.274","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"02:00:29.054","source":"Server","level":"LOG","message":"✓ Compiled in 184ms"}
+{"timestamp":"00:00:01.760","source":"Server","level":"WARN","message":"⚠ Slow filesystem detected. The benchmark took 231ms. If \\\\?\\D:\\Suga S AI Tech\\alumni_meet\\frontend\\.next\\dev is a network drive, consider moving it to a local folder.\nSee more: https://nextjs.org/docs/app/guides/local-development"}
+{"timestamp":"00:00:01.838","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:03.366","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:00:25.083","source":"Server","level":"LOG","message":"  Reload env: .env"}
+{"timestamp":"00:00:25.195","source":"Server","level":"LOG","message":"✓ Compiled in 35ms"}
+{"timestamp":"00:01:00.627","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:02:04.745","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:05:21.594","source":"Server","level":"LOG","message":"✓ Compiled in 3.2s"}
+{"timestamp":"00:05:45.957","source":"Server","level":"LOG","message":"✓ Compiled in 140ms"}
+{"timestamp":"00:06:15.698","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:06:28.654","source":"Server","level":"LOG","message":"✓ Compiled in 54ms"}
+{"timestamp":"00:06:55.595","source":"Server","level":"LOG","message":"✓ Compiled in 247ms"}

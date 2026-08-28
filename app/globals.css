@@ -27,7 +27,7 @@ body {
 }
 
 .sidebar {
-    width: 260px;
+    width: 270px;
     background: #eef1e9;
     border-right: 1px solid var(--line);
     padding: 31px 20px 24px;
