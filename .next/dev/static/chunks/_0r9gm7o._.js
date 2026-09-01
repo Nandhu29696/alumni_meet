@@ -157,7 +157,11 @@ function Home() {
                             access_token: (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAccessToken"])(),
                             refresh_token: (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$auth$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getRefreshToken"])()
                         }));
-                        if (profile.role === 'admin' || profile.role === 'super_admin') {
+                        if (!profile.tenant_id && profile.role === 'tenant_admin') {
+                            window.location.assign('/onboard');
+                            return;
+                        }
+                        if (profile.role === 'admin' || profile.role === 'super_admin' || profile.role === 'tenant_admin') {
                             const [attendanceData, analyticsData] = await Promise.all([
                                 (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAttendance"])(),
                                 (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAnalytics"])()
@@ -231,6 +235,30 @@ function Home() {
             setSelectedPerson(await (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAlumniProfile"])(person.user_id || person.id));
         } catch  {
             setSelectedPerson(person);
+        }
+    }
+    async function togglePersonFollow(personId) {
+        try {
+            const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toggleFollow"])(personId);
+            setSelectedPerson((current)=>current ? {
+                    ...current,
+                    ...result,
+                    is_following: Boolean(result.is_following)
+                } : current);
+            setPeople((current)=>current.map((person)=>{
+                    const id = person.user_id || person.id;
+                    if (id !== personId) return person;
+                    return {
+                        ...person,
+                        is_following: Boolean(result.is_following),
+                        followers_count: Number(result.followers_count || 0),
+                        following_count: Number(result.following_count || 0)
+                    };
+                }));
+            return result;
+        } catch (error) {
+            notify('error', errorMessage(error, 'Could not update follow status.'));
+            return null;
         }
     }
     async function openEvent(event) {
@@ -379,7 +407,7 @@ function Home() {
             notify('error', errorMessage(error, 'Could not remove person.'));
         }
     }
-    const admin = user.role === 'admin' || user.role === 'super_admin';
+    const admin = user.role === 'admin' || user.role === 'super_admin' || user.role === 'tenant_admin';
     const navTabs = admin ? [
         ...tabs,
         [
@@ -397,16 +425,18 @@ function Home() {
             onBack: ()=>setSelectedEvent(null)
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 333,
+            lineNumber: 354,
             columnNumber: 14
         }, this);
     } else if (selectedPerson) {
         screen = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$AlumniDetailScreen$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
             person: selectedPerson,
-            onBack: ()=>setSelectedPerson(null)
+            currentUserId: user?.id,
+            onBack: ()=>setSelectedPerson(null),
+            onFollowToggle: togglePersonFollow
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 335,
+            lineNumber: 356,
             columnNumber: 14
         }, this);
     } else if (active === 'Overview') {
@@ -419,7 +449,7 @@ function Home() {
             setActive: setActive
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 337,
+            lineNumber: 358,
             columnNumber: 14
         }, this);
     }
@@ -432,7 +462,7 @@ function Home() {
             loading: loading
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 341,
+            lineNumber: 362,
             columnNumber: 14
         }, this);
     }
@@ -447,7 +477,7 @@ function Home() {
             loading: loading
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 345,
+            lineNumber: 366,
             columnNumber: 14
         }, this);
     }
@@ -458,7 +488,7 @@ function Home() {
             onCancel: cancelEventRsvp
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 349,
+            lineNumber: 370,
             columnNumber: 14
         }, this);
     }
@@ -469,7 +499,7 @@ function Home() {
             onUploadImages: saveProfileImages
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 353,
+            lineNumber: 374,
             columnNumber: 14
         }, this);
     }
@@ -490,7 +520,7 @@ function Home() {
             onConfirm: requestConfirm
         }, void 0, false, {
             fileName: "[project]/app/page.jsx",
-            lineNumber: 357,
+            lineNumber: 378,
             columnNumber: 14
         }, this);
     }
@@ -513,20 +543,20 @@ function Home() {
                                             children: todayLabel()
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 380,
+                                            lineNumber: 401,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                             children: title
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.jsx",
-                                            lineNumber: 381,
+                                            lineNumber: 402,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 379,
+                                    lineNumber: 400,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -544,18 +574,18 @@ function Home() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.jsx",
-                                        lineNumber: 384,
+                                        lineNumber: 405,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 383,
+                                    lineNumber: 404,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 378,
+                            lineNumber: 399,
                             columnNumber: 11
                         }, this),
                         screen,
@@ -568,38 +598,38 @@ function Home() {
                                     className: "loading-line"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 391,
+                                    lineNumber: 412,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "loading-line short"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 391,
+                                    lineNumber: 412,
                                     columnNumber: 46
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "loading-card"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.jsx",
-                                    lineNumber: 392,
+                                    lineNumber: 413,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.jsx",
-                            lineNumber: 390,
+                            lineNumber: 411,
                             columnNumber: 23
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/page.jsx",
-                    lineNumber: 377,
+                    lineNumber: 398,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 376,
+                lineNumber: 397,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ToastStack$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -607,7 +637,7 @@ function Home() {
                 onDismiss: dismissToast
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 397,
+                lineNumber: 418,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ConfirmDialog$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -621,13 +651,13 @@ function Home() {
                 onConfirm: ()=>closeConfirm(true)
             }, void 0, false, {
                 fileName: "[project]/app/page.jsx",
-                lineNumber: 398,
+                lineNumber: 419,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.jsx",
-        lineNumber: 375,
+        lineNumber: 396,
         columnNumber: 5
     }, this);
 }
@@ -735,8 +765,9 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
     ]);
     const filteredEvents = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "AdminScreen.useMemo[filteredEvents]": ()=>{
+            const query = eventQuery.trim().toLowerCase();
             const byQuery = events.filter({
-                "AdminScreen.useMemo[filteredEvents].byQuery": (item)=>item.title.toLowerCase().includes(eventQuery.toLowerCase())
+                "AdminScreen.useMemo[filteredEvents].byQuery": (item)=>(item?.title || '').toLowerCase().includes(query)
             }["AdminScreen.useMemo[filteredEvents].byQuery"]);
             const byStatus = eventStatusFilter === 'all' ? byQuery : byQuery.filter({
                 "AdminScreen.useMemo[filteredEvents]": (item)=>item.status === eventStatusFilter
@@ -751,8 +782,9 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
     ]);
     const filteredPeople = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "AdminScreen.useMemo[filteredPeople]": ()=>{
+            const query = peopleQuery.trim().toLowerCase();
             const byQuery = people.filter({
-                "AdminScreen.useMemo[filteredPeople].byQuery": (person)=>person.name.toLowerCase().includes(peopleQuery.toLowerCase())
+                "AdminScreen.useMemo[filteredPeople].byQuery": (person)=>(person?.name || '').toLowerCase().includes(query)
             }["AdminScreen.useMemo[filteredPeople].byQuery"]);
             const byRole = peopleRoleFilter === 'all' ? byQuery : byQuery.filter({
                 "AdminScreen.useMemo[filteredPeople]": (person)=>(person.role || 'alumni') === peopleRoleFilter
@@ -910,27 +942,27 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "CONTROL ROOM"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 240,
+                                lineNumber: 242,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 children: "Admin console"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 241,
+                                lineNumber: 243,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 children: "Create, update, and manage community events and profiles."
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 242,
+                                lineNumber: 244,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 239,
+                        lineNumber: 241,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -946,7 +978,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 245,
+                                lineNumber: 247,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -956,19 +988,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "+ Create event"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 246,
+                                lineNumber: 248,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 244,
+                        lineNumber: 246,
                         columnNumber: 7
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 238,
+                lineNumber: 240,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -982,27 +1014,27 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "DOOR DESK"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 252,
+                                lineNumber: 254,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 children: "QR check-in"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 253,
+                                lineNumber: 255,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 children: "Scan a member code or paste its URL to mark attendance."
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 254,
+                                lineNumber: 256,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 251,
+                        lineNumber: 253,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1016,7 +1048,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 required: true
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 257,
+                                lineNumber: 259,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1026,7 +1058,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "Use camera scanner"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 264,
+                                lineNumber: 266,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1035,20 +1067,20 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: checkingIn ? 'Checking...' : 'Use pasted code'
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 267,
+                                lineNumber: 269,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 256,
+                        lineNumber: 258,
                         columnNumber: 7
                     }, this),
                     scannerOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$QrScanner$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         onScan: scan
                     }, void 0, false, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 271,
+                        lineNumber: 273,
                         columnNumber: 23
                     }, this),
                     checkInResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1056,13 +1088,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                         children: checkInResult.detail || `${checkInResult.attendee?.name} checked in for ${checkInResult.event_title}.`
                     }, void 0, false, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 272,
+                        lineNumber: 274,
                         columnNumber: 25
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 250,
+                lineNumber: 252,
                 columnNumber: 5
             }, this),
             analytics && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1075,20 +1107,20 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "SYSTEM OVERVIEW"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 279,
+                                lineNumber: 281,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 children: "Dashboard analytics"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 280,
+                                lineNumber: 282,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 278,
+                        lineNumber: 280,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1100,14 +1132,14 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                         children: "Total users"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 283,
+                                        lineNumber: 285,
                                         columnNumber: 14
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                         children: analytics.users.total
                                     }, void 0, false, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 283,
+                                        lineNumber: 285,
                                         columnNumber: 40
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1117,72 +1149,8 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 283,
+                                        lineNumber: 285,
                                         columnNumber: 80
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 283,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
-                                        children: "Events"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 284,
-                                        columnNumber: 14
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                        children: analytics.events.total
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 284,
-                                        columnNumber: 35
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: [
-                                            analytics.events.upcoming,
-                                            " upcoming"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 284,
-                                        columnNumber: 76
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 284,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
-                                        children: "Participation"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 285,
-                                        columnNumber: 14
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                        children: analytics.participation.registrations
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 285,
-                                        columnNumber: 42
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: [
-                                            analytics.participation.attended,
-                                            " attended"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 285,
-                                        columnNumber: 98
                                     }, this)
                                 ]
                             }, void 0, true, {
@@ -1193,10 +1161,74 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
-                                        children: "User growth"
+                                        children: "Events"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AdminScreen.jsx",
                                         lineNumber: 286,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        children: analytics.events.total
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 286,
+                                        columnNumber: 35
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: [
+                                            analytics.events.upcoming,
+                                            " upcoming"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 286,
+                                        columnNumber: 76
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/AdminScreen.jsx",
+                                lineNumber: 286,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                        children: "Participation"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 287,
+                                        columnNumber: 14
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        children: analytics.participation.registrations
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 287,
+                                        columnNumber: 42
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: [
+                                            analytics.participation.attended,
+                                            " attended"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 287,
+                                        columnNumber: 98
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/AdminScreen.jsx",
+                                lineNumber: 287,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
+                                        children: "User growth"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AdminScreen.jsx",
+                                        lineNumber: 288,
                                         columnNumber: 14
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -1206,32 +1238,32 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 286,
+                                        lineNumber: 288,
                                         columnNumber: 40
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: "Last 30 days"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 286,
+                                        lineNumber: 288,
                                         columnNumber: 95
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 286,
+                                lineNumber: 288,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 282,
+                        lineNumber: 284,
                         columnNumber: 7
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 277,
+                lineNumber: 279,
                 columnNumber: 19
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1244,20 +1276,20 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                 children: "ATTENDANCE"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 292,
+                                lineNumber: 294,
                                 columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 children: "Checked-in guests"
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminScreen.jsx",
-                                lineNumber: 293,
+                                lineNumber: 295,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 291,
+                        lineNumber: 293,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1268,7 +1300,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                         children: exporting ? 'Preparing CSV...' : 'Export CSV ↗'
                     }, void 0, false, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 295,
+                        lineNumber: 297,
                         columnNumber: 7
                     }, this),
                     !attendance.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1276,7 +1308,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                         children: "No check-ins yet."
                     }, void 0, false, {
                         fileName: "[project]/components/AdminScreen.jsx",
-                        lineNumber: 298,
+                        lineNumber: 300,
                         columnNumber: 30
                     }, this),
                     attendance.map((row)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1288,7 +1320,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             children: row.attendee
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 300,
+                                            lineNumber: 302,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
@@ -1299,32 +1331,32 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 300,
+                                            lineNumber: 302,
                                             columnNumber: 46
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 300,
+                                    lineNumber: 302,
                                     columnNumber: 9
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
                                     children: row.checked_in_at ? new Date(row.checked_in_at).toLocaleString() : ''
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 301,
+                                    lineNumber: 303,
                                     columnNumber: 9
                                 }, this)
                             ]
                         }, row.id, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 299,
+                            lineNumber: 301,
                             columnNumber: 32
                         }, this))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 290,
+                lineNumber: 292,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1342,7 +1374,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             children: "Published events"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 309,
+                                            lineNumber: 311,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1355,7 +1387,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "⌕"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 312,
+                                                            lineNumber: 314,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1364,13 +1396,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             placeholder: "Search by event name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 313,
+                                                            lineNumber: 315,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 311,
+                                                    lineNumber: 313,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1383,7 +1415,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "All status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 316,
+                                                            lineNumber: 318,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1391,7 +1423,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Upcoming"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 317,
+                                                            lineNumber: 319,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1399,7 +1431,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Completed"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 318,
+                                                            lineNumber: 320,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1407,13 +1439,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Cancelled"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 319,
+                                                            lineNumber: 321,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 315,
+                                                    lineNumber: 317,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1426,7 +1458,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Newest first"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 322,
+                                                            lineNumber: 324,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1434,7 +1466,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Oldest first"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 323,
+                                                            lineNumber: 325,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1442,25 +1474,25 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Title A-Z"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 324,
+                                                            lineNumber: 326,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 321,
+                                                    lineNumber: 323,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 310,
+                                            lineNumber: 312,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 308,
+                                    lineNumber: 310,
                                     columnNumber: 11
                                 }, this),
                                 filteredEvents.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1472,7 +1504,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         children: item.title
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 330,
+                                                        lineNumber: 332,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
@@ -1483,13 +1515,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 331,
+                                                        lineNumber: 333,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                lineNumber: 329,
+                                                lineNumber: 331,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1503,7 +1535,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         children: "✎"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 334,
+                                                        lineNumber: 336,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1513,19 +1545,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         children: "×"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 335,
+                                                        lineNumber: 337,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                lineNumber: 333,
+                                                lineNumber: 335,
                                                 columnNumber: 13
                                             }, this)
                                         ]
                                     }, item.id, true, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 328,
+                                        lineNumber: 330,
                                         columnNumber: 41
                                     }, this)),
                                 !filteredEvents.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1533,13 +1565,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: "No events match this view."
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 338,
+                                    lineNumber: 340,
                                     columnNumber: 38
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 307,
+                            lineNumber: 309,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1552,7 +1584,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             children: "People directory"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 343,
+                                            lineNumber: 345,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1565,7 +1597,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "⌕"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 346,
+                                                            lineNumber: 348,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1574,13 +1606,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             placeholder: "Search by name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 347,
+                                                            lineNumber: 349,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 345,
+                                                    lineNumber: 347,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1593,7 +1625,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "All roles"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 350,
+                                                            lineNumber: 352,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1601,7 +1633,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Alumni"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 351,
+                                                            lineNumber: 353,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1609,13 +1641,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Student"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 352,
+                                                            lineNumber: 354,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 349,
+                                                    lineNumber: 351,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1628,7 +1660,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "All state"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 355,
+                                                            lineNumber: 357,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1636,7 +1668,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Active"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 356,
+                                                            lineNumber: 358,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1644,13 +1676,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Disabled"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 357,
+                                                            lineNumber: 359,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 354,
+                                                    lineNumber: 356,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1663,7 +1695,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Name A-Z"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 360,
+                                                            lineNumber: 362,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1671,25 +1703,25 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                             children: "Newest batch"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AdminScreen.jsx",
-                                                            lineNumber: 361,
+                                                            lineNumber: 363,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 359,
+                                                    lineNumber: 361,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 344,
+                                            lineNumber: 346,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 342,
+                                    lineNumber: 344,
                                     columnNumber: 11
                                 }, this),
                                 filteredPeople.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1703,14 +1735,14 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         alt: ""
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 368,
+                                                        lineNumber: 370,
                                                         columnNumber: 36
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "admin-person-initials",
                                                         children: item.name.slice(0, 2).toUpperCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 368,
+                                                        lineNumber: 370,
                                                         columnNumber: 77
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1719,7 +1751,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                                 children: item.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                                lineNumber: 370,
+                                                                lineNumber: 372,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
@@ -1731,19 +1763,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                                lineNumber: 371,
+                                                                lineNumber: 373,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 369,
+                                                        lineNumber: 371,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                lineNumber: 367,
+                                                lineNumber: 369,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1761,7 +1793,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                                 children: "Alumni"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                                lineNumber: 376,
+                                                                lineNumber: 378,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1769,13 +1801,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                                 children: "Student"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                                lineNumber: 377,
+                                                                lineNumber: 379,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 375,
+                                                        lineNumber: 377,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1786,7 +1818,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         children: item.is_active === false ? 'Enable' : 'Disable'
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 379,
+                                                        lineNumber: 381,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1796,19 +1828,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                         children: "×"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AdminScreen.jsx",
-                                                        lineNumber: 382,
+                                                        lineNumber: 384,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AdminScreen.jsx",
-                                                lineNumber: 374,
+                                                lineNumber: 376,
                                                 columnNumber: 13
                                             }, this)
                                         ]
                                     }, item.id, true, {
                                         fileName: "[project]/components/AdminScreen.jsx",
-                                        lineNumber: 366,
+                                        lineNumber: 368,
                                         columnNumber: 41
                                     }, this)),
                                 !filteredPeople.length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1816,24 +1848,24 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: "No people match this view."
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 385,
+                                    lineNumber: 387,
                                     columnNumber: 38
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 341,
+                            lineNumber: 343,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/AdminScreen.jsx",
-                    lineNumber: 306,
+                    lineNumber: 308,
                     columnNumber: 7
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 305,
+                lineNumber: 307,
                 columnNumber: 5
             }, this),
             modalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1856,20 +1888,20 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             children: "EVENT EDITOR"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 394,
+                                            lineNumber: 396,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                             children: editingId ? 'Edit event' : 'Create an event'
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 395,
+                                            lineNumber: 397,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 393,
+                                    lineNumber: 395,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1880,13 +1912,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: "×"
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 397,
+                                    lineNumber: 399,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 392,
+                            lineNumber: 394,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1898,13 +1930,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     onChange: (eventObject)=>change('title', eventObject.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 400,
+                                    lineNumber: 402,
                                     columnNumber: 21
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 400,
+                            lineNumber: 402,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1916,13 +1948,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     onChange: (eventObject)=>change('description', eventObject.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 401,
+                                    lineNumber: 403,
                                     columnNumber: 27
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 401,
+                            lineNumber: 403,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1938,13 +1970,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('date', eventObject.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 404,
+                                            lineNumber: 406,
                                             columnNumber: 22
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 404,
+                                    lineNumber: 406,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1957,19 +1989,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('time', eventObject.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 405,
+                                            lineNumber: 407,
                                             columnNumber: 28
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 405,
+                                    lineNumber: 407,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 403,
+                            lineNumber: 405,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1981,13 +2013,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     onChange: (eventObject)=>change('location', eventObject.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 408,
+                                    lineNumber: 410,
                                     columnNumber: 39
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 408,
+                            lineNumber: 410,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2005,7 +2037,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Offline"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 413,
+                                                    lineNumber: 415,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2013,7 +2045,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Online"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 414,
+                                                    lineNumber: 416,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2021,19 +2053,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Hybrid"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 415,
+                                                    lineNumber: 417,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 412,
+                                            lineNumber: 414,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 411,
+                                    lineNumber: 413,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2047,19 +2079,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('capacity', eventObject.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 418,
+                                            lineNumber: 420,
                                             columnNumber: 26
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 418,
+                                    lineNumber: 420,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 410,
+                            lineNumber: 412,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2071,7 +2103,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     onChange: (eventObject)=>uploadBanner(eventObject.target.files?.[0])
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 422,
+                                    lineNumber: 424,
                                     columnNumber: 11
                                 }, this),
                                 uploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
@@ -2079,7 +2111,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: "Uploading image..."
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 423,
+                                    lineNumber: 425,
                                     columnNumber: 25
                                 }, this),
                                 uploadError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
@@ -2087,7 +2119,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: uploadError
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 424,
+                                    lineNumber: 426,
                                     columnNumber: 27
                                 }, this),
                                 event.banner_image && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -2096,13 +2128,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     alt: "Event banner preview"
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 425,
+                                    lineNumber: 427,
                                     columnNumber: 34
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 421,
+                            lineNumber: 423,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2117,13 +2149,13 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('registration_deadline', eventObject.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 430,
+                                            lineNumber: 432,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 429,
+                                    lineNumber: 431,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2136,19 +2168,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('price', eventObject.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 433,
+                                            lineNumber: 435,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 432,
+                                    lineNumber: 434,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 428,
+                            lineNumber: 430,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2166,7 +2198,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Upcoming"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 440,
+                                                    lineNumber: 442,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2174,7 +2206,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Completed"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 441,
+                                                    lineNumber: 443,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2182,19 +2214,19 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Cancelled"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 442,
+                                                    lineNumber: 444,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 439,
+                                            lineNumber: 441,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 438,
+                                    lineNumber: 440,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2209,7 +2241,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "Yes"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 447,
+                                                    lineNumber: 449,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2217,25 +2249,25 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                                     children: "No"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AdminScreen.jsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 450,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 446,
+                                            lineNumber: 448,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 445,
+                                    lineNumber: 447,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 437,
+                            lineNumber: 439,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2250,14 +2282,14 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('waitlist_enabled', eventObject.target.checked)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 454,
+                                            lineNumber: 456,
                                             columnNumber: 42
                                         }, this),
                                         "Enable waitlist"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 454,
+                                    lineNumber: 456,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2269,20 +2301,20 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                             onChange: (eventObject)=>change('price', eventObject.target.checked ? 0 : event.price || 100)
                                         }, void 0, false, {
                                             fileName: "[project]/components/AdminScreen.jsx",
-                                            lineNumber: 455,
+                                            lineNumber: 457,
                                             columnNumber: 42
                                         }, this),
                                         "Free event"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 455,
+                                    lineNumber: 457,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 453,
+                            lineNumber: 455,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2295,7 +2327,7 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 459,
+                                    lineNumber: 461,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2305,30 +2337,30 @@ function AdminScreen({ events, people, onCreateEvent, onUpdateEvent, onDeleteEve
                                     children: saving ? 'Saving...' : editingId ? 'Save changes' : 'Create event'
                                 }, void 0, false, {
                                     fileName: "[project]/components/AdminScreen.jsx",
-                                    lineNumber: 460,
+                                    lineNumber: 462,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/AdminScreen.jsx",
-                            lineNumber: 458,
+                            lineNumber: 460,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/AdminScreen.jsx",
-                    lineNumber: 391,
+                    lineNumber: 393,
                     columnNumber: 7
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/AdminScreen.jsx",
-                lineNumber: 390,
+                lineNumber: 392,
                 columnNumber: 19
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/AdminScreen.jsx",
-        lineNumber: 237,
+        lineNumber: 239,
         columnNumber: 10
     }, this);
 }
@@ -2348,11 +2380,43 @@ __turbopack_context__.s([
     ()=>AlumniDetailScreen
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 ;
 function initials(name = '') {
     return name.split(' ').map((part)=>part[0]).join('').slice(0, 2).toUpperCase();
 }
-function AlumniDetailScreen({ person, onBack }) {
+function AlumniDetailScreen({ person, onBack, onFollowToggle, currentUserId }) {
+    _s();
+    const [followState, setFollowState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        is_following: Boolean(person?.is_following),
+        followers_count: Number(person?.followers_count || 0),
+        following_count: Number(person?.following_count || 0)
+    });
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "AlumniDetailScreen.useEffect": ()=>{
+            setFollowState({
+                is_following: Boolean(person?.is_following),
+                followers_count: Number(person?.followers_count || 0),
+                following_count: Number(person?.following_count || 0)
+            });
+        }
+    }["AlumniDetailScreen.useEffect"], [
+        person
+    ]);
+    async function handleFollowToggle() {
+        if (!onFollowToggle) return;
+        const result = await onFollowToggle(person.user_id || person.id);
+        if (result) {
+            setFollowState({
+                is_following: Boolean(result.is_following),
+                followers_count: Number(result.followers_count || 0),
+                following_count: Number(result.following_count || 0)
+            });
+        }
+    }
+    const isSelf = currentUserId && (person.user_id || person.id) === currentUserId;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "profile-screen",
         children: [
@@ -2362,8 +2426,8 @@ function AlumniDetailScreen({ person, onBack }) {
                 children: "← Back to directory"
             }, void 0, false, {
                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                lineNumber: 4,
-                columnNumber: 42
+                lineNumber: 35,
+                columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "profile-cover",
@@ -2372,8 +2436,8 @@ function AlumniDetailScreen({ person, onBack }) {
                 } : undefined
             }, void 0, false, {
                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                lineNumber: 4,
-                columnNumber: 119
+                lineNumber: 36,
+                columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "person-detail-header",
@@ -2385,30 +2449,33 @@ function AlumniDetailScreen({ person, onBack }) {
                             alt: person.name
                         }, void 0, false, {
                             fileName: "[project]/components/AlumniDetailScreen.jsx",
-                            lineNumber: 4,
-                            columnNumber: 343
+                            lineNumber: 38,
+                            columnNumber: 69
                         }, this) : initials(person.name)
                     }, void 0, false, {
                         fileName: "[project]/components/AlumniDetailScreen.jsx",
-                        lineNumber: 4,
-                        columnNumber: 281
+                        lineNumber: 38,
+                        columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            flex: 1
+                        },
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "section-kicker",
                                 children: "ALUMNI PROFILE"
                             }, void 0, false, {
                                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                                lineNumber: 4,
-                                columnNumber: 430
+                                lineNumber: 40,
+                                columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 children: person.name
                             }, void 0, false, {
                                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                                lineNumber: 4,
-                                columnNumber: 484
+                                lineNumber: 41,
+                                columnNumber: 9
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 children: [
@@ -2417,61 +2484,125 @@ function AlumniDetailScreen({ person, onBack }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                                lineNumber: 4,
-                                columnNumber: 506
+                                lineNumber: 42,
+                                columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AlumniDetailScreen.jsx",
-                        lineNumber: 4,
-                        columnNumber: 425
+                        lineNumber: 39,
+                        columnNumber: 7
+                    }, this),
+                    !isSelf && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        className: followState.is_following ? 'secondary-button' : 'primary-button',
+                        onClick: handleFollowToggle,
+                        type: "button",
+                        style: {
+                            minWidth: 130
+                        },
+                        children: followState.is_following ? 'Following' : 'Follow'
+                    }, void 0, false, {
+                        fileName: "[project]/components/AlumniDetailScreen.jsx",
+                        lineNumber: 45,
+                        columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                lineNumber: 4,
-                columnNumber: 243
+                lineNumber: 37,
+                columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "profile-detail-copy",
+                style: {
+                    display: 'grid',
+                    gap: 12
+                },
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: {
+                            display: 'flex',
+                            gap: 16,
+                            flexWrap: 'wrap',
+                            padding: '12px 0'
+                        },
                         children: [
-                            "Class of ",
-                            person.batch_year || '—'
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        children: followState.followers_count
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                        lineNumber: 53,
+                                        columnNumber: 15
+                                    }, this),
+                                    " followers"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                lineNumber: 53,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        children: followState.following_count
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                        lineNumber: 54,
+                                        columnNumber: 15
+                                    }, this),
+                                    " following"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                lineNumber: 54,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    "Class of ",
+                                    person.batch_year || '—'
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                lineNumber: 55,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: person.location || 'India'
+                            }, void 0, false, {
+                                fileName: "[project]/components/AlumniDetailScreen.jsx",
+                                lineNumber: 56,
+                                columnNumber: 9
+                            }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AlumniDetailScreen.jsx",
-                        lineNumber: 4,
-                        columnNumber: 662
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                        children: person.location || 'India'
-                    }, void 0, false, {
-                        fileName: "[project]/components/AlumniDetailScreen.jsx",
-                        lineNumber: 4,
-                        columnNumber: 710
+                        lineNumber: 52,
+                        columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: person.bio || 'This alumni member has not added a bio yet.'
                     }, void 0, false, {
                         fileName: "[project]/components/AlumniDetailScreen.jsx",
-                        lineNumber: 4,
-                        columnNumber: 751
+                        lineNumber: 58,
+                        columnNumber: 7
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AlumniDetailScreen.jsx",
-                lineNumber: 4,
-                columnNumber: 625
+                lineNumber: 51,
+                columnNumber: 5
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/AlumniDetailScreen.jsx",
-        lineNumber: 4,
+        lineNumber: 34,
         columnNumber: 10
     }, this);
 }
+_s(AlumniDetailScreen, "bh6CjxG52ZL1dphy5shIiSkdhgs=");
 _c = AlumniDetailScreen;
 var _c;
 __turbopack_context__.k.register(_c, "AlumniDetailScreen");
@@ -5867,6 +5998,8 @@ __turbopack_context__.s([
     ()=>changePassword,
     "checkIn",
     ()=>checkIn,
+    "createTenant",
+    ()=>createTenant,
     "deleteEvent",
     ()=>deleteEvent,
     "deletePerson",
@@ -5881,6 +6014,8 @@ __turbopack_context__.s([
     ()=>getAnalytics,
     "getAttendance",
     ()=>getAttendance,
+    "getErrorMessage",
+    ()=>getErrorMessage,
     "getEvent",
     ()=>getEvent,
     "getEvents",
@@ -5901,6 +6036,8 @@ __turbopack_context__.s([
     ()=>resetPassword,
     "rsvp",
     ()=>rsvp,
+    "toggleFollow",
+    ()=>toggleFollow,
     "updateEvent",
     ()=>updateEvent,
     "updatePerson",
@@ -5929,6 +6066,13 @@ function normalizeApiBase(value) {
     }
 }
 const API_URL = normalizeApiBase(("TURBOPACK compile-time value", "http://localhost:8000/api"));
+function getErrorMessage(error, fallback = 'Request failed') {
+    if (!error) return fallback;
+    if (typeof error === 'string') return error.trim() || fallback;
+    if (error.detail) return error.detail;
+    if (error.message) return error.message;
+    return fallback;
+}
 async function apiRequest(path, options = {}) {
     const { _retried, ...requestOptions } = options;
     const method = (options.method || 'GET').toUpperCase();
@@ -6000,7 +6144,7 @@ async function apiRequest(path, options = {}) {
     const isJson = contentType.includes('application/json') || hasJsonReader && !hasTextReader;
     const data = isJson ? await response.json().catch(()=>({})) : hasTextReader ? await response.text() : {};
     if (!response.ok) {
-        if (isJson && data && typeof data === 'object') throw new Error(data.detail || 'Request failed');
+        if (isJson && data && typeof data === 'object') throw new Error(getErrorMessage(data, 'Request failed'));
         throw new Error(typeof data === 'string' && data.trim() || 'Request failed');
     }
     return isJson ? data : {
@@ -6052,6 +6196,12 @@ async function registerAccount(details) {
         body: JSON.stringify(details)
     });
 }
+async function createTenant(details) {
+    return apiRequest('/tenants/', {
+        method: 'POST',
+        body: JSON.stringify(details)
+    });
+}
 const logout = async ()=>{
     try {
         return await apiRequest('/auth/logout/', {
@@ -6068,6 +6218,9 @@ const getEvents = (params = {})=>{
 const getEvent = (eventId)=>apiRequest(`/events/${eventId}/`);
 const getAlumni = (page = 1)=>apiRequest(`/alumni/?page=${page}`);
 const getAlumniProfile = (personId)=>apiRequest(`/alumni/${personId}/`);
+const toggleFollow = (personId)=>apiRequest(`/alumni/${personId}/follow/`, {
+        method: 'POST'
+    });
 const rsvp = (eventId)=>apiRequest(`/events/${eventId}/register/`, {
         method: 'POST'
     });

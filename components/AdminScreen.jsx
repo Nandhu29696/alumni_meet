@@ -89,13 +89,15 @@ export default function AdminScreen({
   }, [editingId, events]);
 
   const filteredEvents = useMemo(() => {
-    const byQuery = events.filter((item) => item.title.toLowerCase().includes(eventQuery.toLowerCase()));
+    const query = eventQuery.trim().toLowerCase();
+    const byQuery = events.filter((item) => (item?.title || '').toLowerCase().includes(query));
     const byStatus = eventStatusFilter === 'all' ? byQuery : byQuery.filter((item) => item.status === eventStatusFilter);
     return sortEvents(byStatus, eventSort);
   }, [events, eventQuery, eventStatusFilter, eventSort]);
 
   const filteredPeople = useMemo(() => {
-    const byQuery = people.filter((person) => person.name.toLowerCase().includes(peopleQuery.toLowerCase()));
+    const query = peopleQuery.trim().toLowerCase();
+    const byQuery = people.filter((person) => (person?.name || '').toLowerCase().includes(query));
     const byRole = peopleRoleFilter === 'all' ? byQuery : byQuery.filter((person) => (person.role || 'alumni') === peopleRoleFilter);
     const byState = peopleStateFilter === 'all'
       ? byRole

@@ -42,21 +42,21 @@ function CheckInPage() {
                 "CheckInPage.useEffect": (error)=>setState({
                         loading: false,
                         result: null,
-                        error: error.message || 'Unable to verify this registration.'
+                        error: (0, __TURBOPACK__imported__module__$5b$project$5d2f$services$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getErrorMessage"])(error, 'Unable to verify this registration.')
                     })
             }["CheckInPage.useEffect"]);
         }
     }["CheckInPage.useEffect"], []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-        className: "auth-shell",
+        className: "check-in-shell",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-            className: "auth-card check-in-card",
+            className: "check-in-card",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "auth-logo",
+                    className: "check-in-brand",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                            className: "auth-logo-mark",
+                            className: "check-in-brand-mark",
                             children: "AM"
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
@@ -64,19 +64,20 @@ function CheckInPage() {
                             columnNumber: 17
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "check-in-brand-text",
                             children: [
                                 "Alumni",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                     fileName: "[project]/app/check-in/page.jsx",
                                     lineNumber: 24,
-                                    columnNumber: 29
+                                    columnNumber: 61
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                     children: "Meet"
                                 }, void 0, false, {
                                     fileName: "[project]/app/check-in/page.jsx",
                                     lineNumber: 24,
-                                    columnNumber: 35
+                                    columnNumber: 67
                                 }, this)
                             ]
                         }, void 0, true, {
@@ -90,102 +91,125 @@ function CheckInPage() {
                     lineNumber: 22,
                     columnNumber: 13
                 }, this),
-                state.loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                state.loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "check-in-status check-in-loading",
+                    "aria-live": "polite",
                     children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                            children: "Verifying entry"
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "check-in-status-pill",
+                            children: "Verifying"
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 28,
-                            columnNumber: 17
+                            lineNumber: 29,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            children: "Checking entry"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 30,
+                            columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "Checking the registration and attendee details."
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 29,
-                            columnNumber: 17
+                            lineNumber: 31,
+                            columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/check-in/page.jsx",
-                    lineNumber: 27,
-                    columnNumber: 30
-                }, this) : state.result ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    lineNumber: 28,
+                    columnNumber: 17
+                }, this) : state.result ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "check-in-status check-in-success",
+                    "aria-live": "polite",
                     children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "check-in-status-pill success-pill",
                             children: "Attendance confirmed"
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 31,
-                            columnNumber: 17
+                            lineNumber: 35,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            children: state.result.attendee?.name
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 36,
+                            columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                    children: state.result.attendee?.name
-                                }, void 0, false, {
-                                    fileName: "[project]/app/check-in/page.jsx",
-                                    lineNumber: 33,
-                                    columnNumber: 21
-                                }, this),
-                                " is checked in for",
+                                "Checked in for ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                     children: state.result.event_title
                                 }, void 0, false, {
                                     fileName: "[project]/app/check-in/page.jsx",
-                                    lineNumber: 34,
-                                    columnNumber: 21
+                                    lineNumber: 37,
+                                    columnNumber: 39
                                 }, this),
                                 "."
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 32,
-                            columnNumber: 17
+                            lineNumber: 37,
+                            columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "check-in-success",
+                            className: "check-in-quiet",
                             children: "Status: Attended"
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 35,
-                            columnNumber: 17
+                            lineNumber: 38,
+                            columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/check-in/page.jsx",
-                    lineNumber: 30,
-                    columnNumber: 34
-                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    lineNumber: 34,
+                    columnNumber: 17
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "check-in-status check-in-error",
+                    "aria-live": "polite",
                     children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "check-in-status-pill danger-pill",
+                            children: "Access required"
+                        }, void 0, false, {
+                            fileName: "[project]/app/check-in/page.jsx",
+                            lineNumber: 42,
+                            columnNumber: 21
+                        }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                             children: "Unable to check in"
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 37,
-                            columnNumber: 17
+                            lineNumber: 43,
+                            columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "auth-error",
                             children: state.error
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 38,
-                            columnNumber: 17
+                            lineNumber: 44,
+                            columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "Sign in as an administrator and scan the QR code again."
                         }, void 0, false, {
                             fileName: "[project]/app/check-in/page.jsx",
-                            lineNumber: 39,
-                            columnNumber: 17
+                            lineNumber: 45,
+                            columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/check-in/page.jsx",
-                    lineNumber: 36,
-                    columnNumber: 19
+                    lineNumber: 41,
+                    columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
@@ -223,6 +247,8 @@ __turbopack_context__.s([
     ()=>changePassword,
     "checkIn",
     ()=>checkIn,
+    "createTenant",
+    ()=>createTenant,
     "deleteEvent",
     ()=>deleteEvent,
     "deletePerson",
@@ -237,6 +263,8 @@ __turbopack_context__.s([
     ()=>getAnalytics,
     "getAttendance",
     ()=>getAttendance,
+    "getErrorMessage",
+    ()=>getErrorMessage,
     "getEvent",
     ()=>getEvent,
     "getEvents",
@@ -257,6 +285,8 @@ __turbopack_context__.s([
     ()=>resetPassword,
     "rsvp",
     ()=>rsvp,
+    "toggleFollow",
+    ()=>toggleFollow,
     "updateEvent",
     ()=>updateEvent,
     "updatePerson",
@@ -285,6 +315,13 @@ function normalizeApiBase(value) {
     }
 }
 const API_URL = normalizeApiBase(("TURBOPACK compile-time value", "http://localhost:8000/api"));
+function getErrorMessage(error, fallback = 'Request failed') {
+    if (!error) return fallback;
+    if (typeof error === 'string') return error.trim() || fallback;
+    if (error.detail) return error.detail;
+    if (error.message) return error.message;
+    return fallback;
+}
 async function apiRequest(path, options = {}) {
     const { _retried, ...requestOptions } = options;
     const method = (options.method || 'GET').toUpperCase();
@@ -356,7 +393,7 @@ async function apiRequest(path, options = {}) {
     const isJson = contentType.includes('application/json') || hasJsonReader && !hasTextReader;
     const data = isJson ? await response.json().catch(()=>({})) : hasTextReader ? await response.text() : {};
     if (!response.ok) {
-        if (isJson && data && typeof data === 'object') throw new Error(data.detail || 'Request failed');
+        if (isJson && data && typeof data === 'object') throw new Error(getErrorMessage(data, 'Request failed'));
         throw new Error(typeof data === 'string' && data.trim() || 'Request failed');
     }
     return isJson ? data : {
@@ -408,6 +445,12 @@ async function registerAccount(details) {
         body: JSON.stringify(details)
     });
 }
+async function createTenant(details) {
+    return apiRequest('/tenants/', {
+        method: 'POST',
+        body: JSON.stringify(details)
+    });
+}
 const logout = async ()=>{
     try {
         return await apiRequest('/auth/logout/', {
@@ -424,6 +467,9 @@ const getEvents = (params = {})=>{
 const getEvent = (eventId)=>apiRequest(`/events/${eventId}/`);
 const getAlumni = (page = 1)=>apiRequest(`/alumni/?page=${page}`);
 const getAlumniProfile = (personId)=>apiRequest(`/alumni/${personId}/`);
+const toggleFollow = (personId)=>apiRequest(`/alumni/${personId}/follow/`, {
+        method: 'POST'
+    });
 const rsvp = (eventId)=>apiRequest(`/events/${eventId}/register/`, {
         method: 'POST'
     });

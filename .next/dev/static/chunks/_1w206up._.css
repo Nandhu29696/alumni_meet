@@ -1872,6 +1872,10 @@ img, video {
   visibility: visible;
 }
 
+.flex {
+  display: flex;
+}
+
 .table {
   display: table;
 }

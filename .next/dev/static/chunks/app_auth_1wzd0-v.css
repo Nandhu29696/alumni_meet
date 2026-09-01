@@ -51,7 +51,8 @@
   font-weight: 700;
 }
 
-.auth-card input {
+.auth-card input, .auth-card select {
+  background: #fff;
   border: 1px solid #dfe4da;
   outline-color: #315a45;
   width: 100%;
@@ -59,6 +60,10 @@
   padding: 12px;
   font: 13px DM Sans;
   display: block;
+}
+
+.auth-card select {
+  appearance: none;
 }
 
 .auth-submit {
@@ -69,6 +74,11 @@
   margin-top: 8px;
   padding: 13px;
   font: 700 12px DM Sans;
+}
+
+.auth-submit:disabled {
+  opacity: .7;
+  cursor: wait;
 }
 
 .auth-error {
@@ -105,6 +115,136 @@
   font-size: 11px;
   font-weight: 700;
   display: grid;
+}
+
+.check-in-shell {
+  color: #1e2623;
+  background: linear-gradient(135deg, #f4f0eb 0%, #f8f7f4 100%);
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 32px 26px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.check-in-shell:before {
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(circle at 0 0, #adc4b038, #0000 30%), radial-gradient(circle at 100% 100%, #d4a0731f, #0000 28%);
+  position: absolute;
+  inset: 0;
+}
+
+.check-in-card {
+  z-index: 1;
+  width: min(560px, 100%);
+  box-shadow: none;
+  background: none;
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+.check-in-brand {
+  letter-spacing: -.02em;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 26px;
+  font-size: 17px;
+  line-height: 1.02;
+  display: flex;
+}
+
+.check-in-brand-mark {
+  color: #f3f1ee;
+  background: linear-gradient(135deg, #1e2623, #35463d);
+  border-radius: 10px;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  font-size: 11px;
+  font-weight: 800;
+  display: grid;
+  box-shadow: 0 10px 24px #1e262324;
+}
+
+.check-in-brand-text strong {
+  font-weight: 700;
+  display: inline-block;
+}
+
+.check-in-status {
+  gap: 10px;
+  max-width: 520px;
+  padding: 18px 0 6px;
+  display: grid;
+  position: relative;
+}
+
+.check-in-status:before {
+  content: "";
+  background: #1e262314;
+  border-radius: 999px;
+  width: 3px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -14px;
+}
+
+.check-in-status-pill {
+  color: #d95f4d;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  background: #d95f4d0f;
+  border-left: 3px solid #d95f4d;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.check-in-status-pill.success-pill {
+  color: #2e8f67;
+  background: #2e8f670f;
+  border-left-color: #2e8f67;
+}
+
+.check-in-status h1 {
+  color: #1c2320;
+  margin: 0;
+  font: 700 36px / 1.1 Playfair Display, Georgia, serif;
+}
+
+.check-in-status p {
+  color: #4f5852;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.check-in-status strong {
+  color: #1a201d;
+}
+
+.check-in-quiet {
+  color: #6c756f !important;
+  margin-top: 4px !important;
+}
+
+.check-in-error .auth-error {
+  font-weight: 700;
+  font-size: 17px !important;
+}
+
+.check-in-loading .check-in-status-pill {
+  color: #5b7a6b;
+  background: #5b7a6b14;
+  border-left-color: #5b7a6b;
 }
 
 /*# sourceMappingURL=app_auth_1wzd0-v.css.map*/

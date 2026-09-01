@@ -13,6 +13,7 @@ import {
   getAlumniProfile,
   getAnalytics,
   getAttendance,
+  toggleFollow,
   getEvent,
   getEvents,
   getMyEvents,
@@ -121,7 +122,11 @@ export default function Home() {
         setUser(profile);
         dispatch(setAuthUser(profile));
         dispatch(setTokens({ access_token: getAccessToken(), refresh_token: getRefreshToken() }));
-        if (profile.role === 'admin' || profile.role === 'super_admin') {
+        if (!profile.tenant_id && profile.role === 'tenant_admin') {
+          window.location.assign('/onboard');
+          return;
+        }
+        if (profile.role === 'admin' || profile.role === 'super_admin' || profile.role === 'tenant_admin') {
           const [attendanceData, analyticsData] = await Promise.all([getAttendance(), getAnalytics()]);
           setAttendance(attendanceData.results);
           setAnalytics(analyticsData);
@@ -179,6 +184,22 @@ export default function Home() {
       setSelectedPerson(await getAlumniProfile(person.user_id || person.id));
     } catch {
       setSelectedPerson(person);
+    }
+  }
+
+  async function togglePersonFollow(personId) {
+    try {
+      const result = await toggleFollow(personId);
+      setSelectedPerson((current) => current ? { ...current, ...result, is_following: Boolean(result.is_following) } : current);
+      setPeople((current) => current.map((person) => {
+        const id = person.user_id || person.id;
+        if (id !== personId) return person;
+        return { ...person, is_following: Boolean(result.is_following), followers_count: Number(result.followers_count || 0), following_count: Number(result.following_count || 0) };
+      }));
+      return result;
+    } catch (error) {
+      notify('error', errorMessage(error, 'Could not update follow status.'));
+      return null;
     }
   }
 
@@ -324,7 +345,7 @@ export default function Home() {
     }
   }
 
-  const admin = user.role === 'admin' || user.role === 'super_admin';
+  const admin = user.role === 'admin' || user.role === 'super_admin' || user.role === 'tenant_admin';
   const navTabs = admin ? [...tabs, ['Admin console', '◆']] : tabs;
   const title = active === 'Overview' ? `${timeGreeting()}, ${user.name?.split(' ')[0] || 'there'}` : active;
 
@@ -332,7 +353,7 @@ export default function Home() {
   if (selectedEvent) {
     screen = <EventDetailScreen event={selectedEvent} registered={registered.includes(selectedEvent.id)} onRsvp={registerFor} onBack={() => setSelectedEvent(null)} />;
   } else if (selectedPerson) {
-    screen = <AlumniDetailScreen person={selectedPerson} onBack={() => setSelectedPerson(null)} />;
+    screen = <AlumniDetailScreen person={selectedPerson} currentUserId={user?.id} onBack={() => setSelectedPerson(null)} onFollowToggle={togglePersonFollow} />;
   } else if (active === 'Overview') {
     screen = <Overview events={events} people={people} registered={registered} onRsvp={registerFor} onOpen={openEvent} setActive={setActive} />;
   }

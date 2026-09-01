@@ -16,6 +16,14 @@ function normalizeApiBase(value) {
 
 const API_URL = normalizeApiBase(process.env.NEXT_PUBLIC_API_URL);
 
+export function getErrorMessage(error, fallback = 'Request failed') {
+  if (!error) return fallback;
+  if (typeof error === 'string') return error.trim() || fallback;
+  if (error.detail) return error.detail;
+  if (error.message) return error.message;
+  return fallback;
+}
+
 export async function apiRequest(path, options = {}) {
   const { _retried, ...requestOptions } = options;
   const method = (options.method || 'GET').toUpperCase();
@@ -78,7 +86,7 @@ export async function apiRequest(path, options = {}) {
       : {};
 
   if (!response.ok) {
-    if (isJson && data && typeof data === 'object') throw new Error(data.detail || 'Request failed');
+    if (isJson && data && typeof data === 'object') throw new Error(getErrorMessage(data, 'Request failed'));
     throw new Error((typeof data === 'string' && data.trim()) || 'Request failed');
   }
 
@@ -112,6 +120,10 @@ export async function registerAccount(details) {
   return apiRequest('/auth/register/', { method: 'POST', body: JSON.stringify(details) });
 }
 
+export async function createTenant(details) {
+  return apiRequest('/tenants/', { method: 'POST', body: JSON.stringify(details) });
+}
+
 export const logout = async () => {
   try {
     return await apiRequest('/auth/logout/', { method: 'POST' });
@@ -128,6 +140,7 @@ export const getEvents = (params = {}) => {
 export const getEvent = (eventId) => apiRequest(`/events/${eventId}/`);
 export const getAlumni = (page = 1) => apiRequest(`/alumni/?page=${page}`);
 export const getAlumniProfile = (personId) => apiRequest(`/alumni/${personId}/`);
+export const toggleFollow = (personId) => apiRequest(`/alumni/${personId}/follow/`, { method: 'POST' });
 export const rsvp = (eventId) => apiRequest(`/events/${eventId}/register/`, { method: 'POST' });
 export const cancelRsvp = (eventId) => apiRequest(`/events/${eventId}/register/`, { method: 'POST', body: JSON.stringify({ status: 'cancelled' }) });
 export const getMyEvents = () => apiRequest('/my-events/');
