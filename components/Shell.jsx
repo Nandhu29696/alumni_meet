@@ -19,7 +19,7 @@ export function ProfileMenu({ user, onProfile, onSignOut }) {
 export default function Shell({ children, active, setActive, navTabs }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [logoError, setLogoError] = useState(false);
-    const mobileTabs = navTabs.filter(([item]) => ['Overview', 'Alumni directory', 'Events', 'My events', 'My profile'].includes(item));
+    const mobileTabs = navTabs.filter(([item]) => ['Overview', 'Alumni directory', 'Events', 'My events', 'My profile', 'Admin console'].includes(item));
     function selectTab(item) { setActive(item); setMenuOpen(false); }
 
     const brandNode = <>
@@ -70,7 +70,7 @@ export default function Shell({ children, active, setActive, navTabs }) {
                     aria-current={active === item ? 'page' : undefined}
                 >
                     <span className="nav-icon" aria-hidden="true">{icon}</span>
-                    <span>{item === 'Alumni directory' ? 'Directory' : item === 'My profile' ? 'Profile' : item}</span>
+                    <span>{item === 'Alumni directory' ? 'Directory' : item === 'My profile' ? 'Profile' : item === 'Admin console' ? 'Admin' : item}</span>
                 </button>
             )}
         </nav>

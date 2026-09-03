@@ -19,6 +19,20 @@ const emptyEvent = {
   is_active: true
 };
 
+const managedFeatures = [
+  ['member_management', 'Members'],
+  ['event_management', 'Events'],
+  ['event_banners', 'Banners'],
+  ['qr_checkin', 'QR check-in'],
+  ['attendance_export', 'Reports'],
+  ['analytics', 'Analytics'],
+  ['branding', 'Branding']
+];
+
+function organizationFeatures(organization) {
+  return Object.fromEntries(managedFeatures.map(([feature]) => [feature, organization.features?.[feature] ?? organization.subscription_plan === 'chapter']));
+}
+
 function eventFormValues(event) {
   if (!event) return emptyEvent;
   const date = event.date ? new Date(event.date) : null;
@@ -46,6 +60,12 @@ function sortPeople(items, mode) {
   return cloned.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 }
 
+function updatedLabel(item) {
+  const value = item.updated_at || item.created_at;
+  if (!value) return 'Last updated: unavailable';
+  return `Last updated: ${new Date(value).toLocaleDateString()}`;
+}
+
 export default function AdminScreen({
   events,
   people,
@@ -57,6 +77,11 @@ export default function AdminScreen({
   onCheckIn,
   attendance,
   analytics,
+  organizations = [],
+  contactMessages = [],
+  isSuperAdmin = false,
+  onChangeOrganization,
+  onChangeContactStatus,
   onLoadAttendance,
   onNotify,
   onConfirm
@@ -70,8 +95,10 @@ export default function AdminScreen({
   const [checkInResult, setCheckInResult] = useState(null);
   const [checkingIn, setCheckingIn] = useState(false);
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [scanHistory, setScanHistory] = useState([]);
   const [exporting, setExporting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
 
   const [eventQuery, setEventQuery] = useState('');
   const [eventStatusFilter, setEventStatusFilter] = useState('all');
@@ -81,6 +108,11 @@ export default function AdminScreen({
   const [peopleRoleFilter, setPeopleRoleFilter] = useState('all');
   const [peopleStateFilter, setPeopleStateFilter] = useState('all');
   const [peopleSort, setPeopleSort] = useState('name-asc');
+  const [eventPage, setEventPage] = useState(1);
+  const [peoplePage, setPeoplePage] = useState(1);
+  const [eventPageSize, setEventPageSize] = useState(5);
+  const [peoplePageSize, setPeoplePageSize] = useState(5);
+  const [selectedPeople, setSelectedPeople] = useState([]);
 
   useEffect(() => {
     if (editingId) {
@@ -104,6 +136,29 @@ export default function AdminScreen({
       : byRole.filter((person) => peopleStateFilter === 'active' ? person.is_active !== false : person.is_active === false);
     return sortPeople(byState, peopleSort);
   }, [people, peopleQuery, peopleRoleFilter, peopleStateFilter, peopleSort]);
+
+  useEffect(() => {
+    setEventPage(1);
+  }, [eventQuery, eventStatusFilter, eventSort, eventPageSize]);
+
+  useEffect(() => {
+    setPeoplePage(1);
+  }, [peopleQuery, peopleRoleFilter, peopleStateFilter, peopleSort, peoplePageSize]);
+
+  const eventPageCount = Math.max(1, Math.ceil(filteredEvents.length / eventPageSize));
+  const peoplePageCount = Math.max(1, Math.ceil(filteredPeople.length / peoplePageSize));
+  useEffect(() => {
+    setEventPage((page) => Math.min(page, eventPageCount));
+  }, [eventPageCount]);
+
+  useEffect(() => {
+    setPeoplePage((page) => Math.min(page, peoplePageCount));
+  }, [peoplePageCount]);
+
+  const visibleEvents = filteredEvents.slice((eventPage - 1) * eventPageSize, eventPage * eventPageSize);
+  const visiblePeople = filteredPeople.slice((peoplePage - 1) * peoplePageSize, peoplePage * peoplePageSize);
+  const visiblePersonIds = visiblePeople.map((item) => item.user_id || item.id);
+  const allVisiblePeopleSelected = visiblePersonIds.length > 0 && visiblePersonIds.every((id) => selectedPeople.includes(id));
 
   function change(field, value) {
     setEvent((current) => ({ ...current, [field]: value }));
@@ -173,6 +228,7 @@ export default function AdminScreen({
     try {
       const result = await onCheckIn(qrToken);
       setCheckInResult(result);
+      setScanHistory((current) => [{ ...result, checked_in_at: new Date().toISOString() }, ...current].slice(0, 10));
       setQrToken('');
       onLoadAttendance?.();
       onNotify?.('success', `Checked in ${result.attendee?.name || 'attendee'}.`);
@@ -191,6 +247,7 @@ export default function AdminScreen({
     try {
       const result = await onCheckIn(value);
       setCheckInResult(result);
+      setScanHistory((current) => [{ ...result, checked_in_at: new Date().toISOString() }, ...current].slice(0, 10));
       onLoadAttendance?.();
       onNotify?.('success', `Checked in ${result.attendee?.name || 'attendee'}.`);
     } catch (error) {
@@ -212,6 +269,11 @@ export default function AdminScreen({
     } finally {
       setExporting(false);
     }
+  }
+
+  function scanNext() {
+    setCheckInResult(null);
+    setScannerOpen(true);
   }
 
   async function removeEvent(item) {
@@ -236,8 +298,41 @@ export default function AdminScreen({
     await onDeletePerson(item.user_id || item.id);
   }
 
+  async function changePersonRole(item, role) {
+    if (role === item.role) return;
+    const confirmed = onConfirm ? await onConfirm({
+      title: 'Change member role?',
+      message: `Change ${item.name || 'this member'} to ${role}?`,
+      confirmLabel: 'Change role'
+    }) : window.confirm(`Change ${item.name || 'this member'} to ${role}?`);
+    if (confirmed) await onUpdatePerson(item.user_id || item.id, { role });
+  }
+
+  function togglePersonSelection(id) {
+    setSelectedPeople((current) => current.includes(id) ? current.filter((value) => value !== id) : [...current, id]);
+  }
+
+  function toggleVisiblePeople() {
+    setSelectedPeople((current) => allVisiblePeopleSelected
+      ? current.filter((id) => !visiblePersonIds.includes(id))
+      : [...new Set([...current, ...visiblePersonIds])]);
+  }
+
+  async function bulkUpdatePeople(isActive) {
+    if (!selectedPeople.length) return;
+    const confirmed = onConfirm ? await onConfirm({
+      title: `${isActive ? 'Enable' : 'Disable'} selected members?`,
+      message: `This will ${isActive ? 'enable' : 'disable'} ${selectedPeople.length} selected member${selectedPeople.length === 1 ? '' : 's'}.`,
+      confirmLabel: isActive ? 'Enable members' : 'Disable members',
+      danger: !isActive
+    }) : window.confirm(`${isActive ? 'Enable' : 'Disable'} selected members?`);
+    if (!confirmed) return;
+    await Promise.all(selectedPeople.map((id) => onUpdatePerson(id, { is_active: isActive })));
+    setSelectedPeople([]);
+  }
+
   return <>
-    <div className="screen-heading">
+    <div className="screen-heading admin-console-heading">
       <div>
         <span className="section-kicker">CONTROL ROOM</span>
         <h2>Admin console</h2>
@@ -245,11 +340,26 @@ export default function AdminScreen({
       </div>
       <div className="admin-heading-actions">
         <span className="admin-badge">{people.length} PEOPLE · {events.length} EVENTS</span>
-        <button type="button" className="primary-button" onClick={startCreate}>+ Create event</button>
+        <button type="button" className="primary-button icon-action-button" onClick={startCreate} aria-label="Create event" title="Create event"><span className="button-label">+ Create event</span></button>
       </div>
     </div>
 
-    <form className="check-in-form" onSubmit={checkInGuest}>
+    <nav className="admin-console-nav" aria-label="Admin console sections">
+      <a className={activeSection === 'overview' ? 'active' : ''} href="#admin-overview" onClick={() => setActiveSection('overview')}>Overview</a>
+      <a className={activeSection === 'events' ? 'active' : ''} href="#admin-events" onClick={() => setActiveSection('events')}>Events <span>{events.length}</span></a>
+      <a className={activeSection === 'people' ? 'active' : ''} href="#admin-people" onClick={() => setActiveSection('people')}>People <span>{people.length}</span></a>
+      <a className={activeSection === 'attendance' ? 'active' : ''} href="#admin-attendance" onClick={() => setActiveSection('attendance')}>Attendance</a>
+      {isSuperAdmin && <><a className={activeSection === 'organizations' ? 'active' : ''} href="#admin-organizations" onClick={() => setActiveSection('organizations')}>Organizations <span>{organizations.length}</span></a><a className={activeSection === 'requests' ? 'active' : ''} href="#admin-requests" onClick={() => setActiveSection('requests')}>Requests <span>{contactMessages.length}</span></a></>}
+    </nav>
+
+    <div className="admin-overview-strip" id="admin-overview">
+      <div><span>People</span><strong>{people.length}</strong><small>Member profiles</small></div>
+      <div><span>Events</span><strong>{events.length}</strong><small>Published events</small></div>
+      <div><span>Checked in</span><strong>{attendance.length}</strong><small>Attendance records</small></div>
+      {isSuperAdmin && <div><span>Open requests</span><strong>{contactMessages.filter((item) => item.status === 'new').length}</strong><small>Need your attention</small></div>}
+    </div>
+
+    {(activeSection === 'overview' || activeSection === 'attendance') && <form className="check-in-form" id="admin-attendance" onSubmit={checkInGuest}>
       <div>
         <span className="section-kicker">DOOR DESK</span>
         <h3>QR check-in</h3>
@@ -263,20 +373,21 @@ export default function AdminScreen({
           onChange={(eventObject) => setQrToken(eventObject.target.value)}
           required
         />
-        <button type="button" className="primary-button mobile-camera-action" onClick={() => setScannerOpen(true)}>
-          Use camera scanner
+        <button type="button" className="primary-button mobile-camera-action icon-action-button qr-icon-button" onClick={() => setScannerOpen(true)} aria-label="Use camera scanner" title="Use camera scanner">
+          <span className="button-label">Use camera scanner</span>
         </button>
-        <button className="secondary-button" disabled={checkingIn}>
-          {checkingIn ? 'Checking...' : 'Use pasted code'}
+        <button className="secondary-button icon-action-button qr-icon-button" disabled={checkingIn} aria-label="Use pasted code" title="Use pasted code">
+          <span className="button-label">{checkingIn ? 'Checking...' : 'Use pasted code'}</span>
         </button>
       </div>
-      {scannerOpen && <QrScanner onScan={scan} />}
-      {checkInResult && <p className={checkInResult.detail ? 'check-in-result error' : 'check-in-result'}>
-        {checkInResult.detail || `${checkInResult.attendee?.name} checked in for ${checkInResult.event_title}.`}
-      </p>}
-    </form>
+      {scannerOpen && <QrScanner onScan={scan} onClose={() => setScannerOpen(false)} />}
+      {checkInResult && <div className={checkInResult.detail ? 'check-in-result error' : 'check-in-result'}>
+        {checkInResult.detail ? <p>{checkInResult.detail}</p> : <><div className="check-in-success"><span className="check-in-attendee-avatar">{checkInResult.attendee?.avatar_image ? <img src={checkInResult.attendee.avatar_image} alt="" /> : (checkInResult.attendee?.name || 'A').slice(0, 2).toUpperCase()}</span><span><strong>{checkInResult.attendee?.name || 'Attendee'}</strong><small>{checkInResult.event_title || 'Event'} · Checked in just now</small></span></div><button type="button" className="primary-button scan-next-button" onClick={scanNext}>Scan next <span aria-hidden="true">↗</span></button></>}
+      </div>}
+      {scanHistory.length > 0 && <div className="scan-history"><span className="section-kicker">THIS SESSION</span>{scanHistory.map((scanResult, index) => <div className="scan-history-item" key={`${scanResult.event_id || 'scan'}-${scanResult.attendee?.id || index}-${scanResult.checked_in_at}`}><span>{scanResult.attendee?.name || 'Attendee'}</span><small>{scanResult.event_title || 'Event'} · {new Date(scanResult.checked_in_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</small></div>)}</div>}
+    </form>}
 
-    {analytics && <div className="analytics-panel">
+    {activeSection === 'overview' && analytics && <div className="analytics-panel">
       <div>
         <span className="section-kicker">SYSTEM OVERVIEW</span>
         <h3>Dashboard analytics</h3>
@@ -289,24 +400,29 @@ export default function AdminScreen({
       </div>
     </div>}
 
-    <div className="attendance-panel">
+    {activeSection === 'overview' && <section className="admin-activity-panel" aria-labelledby="activity-heading">
+      <div className="admin-activity-heading"><div><span className="section-kicker">TODAY'S ACTIVITY</span><h3 id="activity-heading">Recent check-ins</h3></div><button className="text-button" type="button" onClick={() => setActiveSection('attendance')}>View attendance <span aria-hidden="true">↗</span></button></div>
+      {attendance.length ? <div className="admin-activity-list">{attendance.slice(0, 4).map((row) => <div className="admin-activity-item" key={row.id}><span className="admin-activity-status" aria-hidden="true">✓</span><span><strong>{row.attendee}</strong><small>{row.event_title}</small></span><time>{row.checked_in_at ? new Date(row.checked_in_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : 'Today'}</time></div>)}</div> : <p className="empty-state">No check-ins recorded today.</p>}
+    </section>}
+
+    {activeSection === 'attendance' && <div className="attendance-panel" id="admin-attendance-list">
       <div>
         <span className="section-kicker">ATTENDANCE</span>
         <h3>Checked-in guests</h3>
       </div>
-      <button className="text-button" type="button" onClick={exportAttendance} disabled={exporting}>
-        {exporting ? 'Preparing CSV...' : 'Export CSV ↗'}
+      <button className="text-button icon-action-button" type="button" onClick={exportAttendance} disabled={exporting} aria-label="Export attendance CSV" title="Export attendance CSV">
+        <span className="button-label">{exporting ? 'Preparing CSV...' : 'Export CSV ↗'}</span>
       </button>
       {!attendance.length && <p className="empty-state">No check-ins yet.</p>}
       {attendance.map((row) => <div className="admin-row" key={row.id}>
         <span><strong>{row.attendee}</strong><small>{row.event_title} · {row.email}</small></span>
         <small>{row.checked_in_at ? new Date(row.checked_in_at).toLocaleString() : ''}</small>
       </div>)}
-    </div>
+    </div>}
 
-    <div className="admin-layout">
+    {(activeSection === 'events' || activeSection === 'people') && <div className="admin-layout">
       <div className="admin-stack">
-        <div className="admin-events published-events">
+        {activeSection === 'events' && <div className="admin-events published-events" id="admin-events">
           <div className="directory-toolbar">
             <h3>Published events</h3>
             <div className="admin-toolbar-controls">
@@ -325,22 +441,19 @@ export default function AdminScreen({
                 <option value="date-asc">Oldest first</option>
                 <option value="title-asc">Title A-Z</option>
               </select>
+              <select className="admin-compact-select" value={eventPageSize} onChange={(eventObject) => setEventPageSize(Number(eventObject.target.value))} aria-label="Events per page">
+                <option value="5">5 per page</option>
+                <option value="10">10 per page</option>
+                <option value="25">25 per page</option>
+              </select>
             </div>
           </div>
-          {filteredEvents.map((item) => <div className="admin-row" key={item.id}>
-            <span>
-              <strong>{item.title}</strong>
-              <small>{item.date} · {item.location}</small>
-            </span>
-            <div className="row-actions">
-              <button className="edit-button edit-icon-button" onClick={() => startEdit(item)} aria-label={`Edit ${item.title}`} title="Edit event">✎</button>
-              <button className="danger-icon" onClick={() => removeEvent(item)} aria-label={`Delete ${item.title}`}>×</button>
-            </div>
-          </div>)}
+          <div className="admin-table" role="table" aria-label="Published events"><div className="admin-table-row admin-table-head" role="row"><span>Event</span><span>Date and location</span><span>Status</span><span>Actions</span></div>{visibleEvents.map((item) => <div className="admin-table-row" role="row" key={item.id}><span data-label="Event"><strong>{item.title}</strong><small className="table-updated">{updatedLabel(item)}</small></span><span data-label="Date and location">{item.date} · {item.location}</span><span className="table-status" data-label="Status">{item.status || 'upcoming'}</span><span className="row-actions" data-label="Actions"><button className="edit-button edit-icon-button icon-action-button" onClick={() => startEdit(item)} aria-label={`Edit ${item.title}`} title={`Edit ${item.title}`}>✎</button><button className="danger-icon icon-action-button" onClick={() => removeEvent(item)} aria-label={`Delete ${item.title}`} title={`Delete ${item.title}`}>×</button></span></div>)}</div>
+          {eventPageCount > 1 && <div className="admin-pagination"><span>Page {eventPage} of {eventPageCount}</span><div><button type="button" className="table-action" onClick={() => setEventPage((page) => Math.max(1, page - 1))} disabled={eventPage === 1}>Previous</button><button type="button" className="table-action" onClick={() => setEventPage((page) => Math.min(eventPageCount, page + 1))} disabled={eventPage === eventPageCount}>Next</button></div></div>}
           {!filteredEvents.length && <p className="empty-state">No events match this view.</p>}
-        </div>
+        </div>}
 
-        <div className="admin-events admin-people">
+        {activeSection === 'people' && <div className="admin-events admin-people" id="admin-people">
           <div className="directory-toolbar">
             <h3>People directory</h3>
             <div className="admin-toolbar-controls">
@@ -362,32 +475,33 @@ export default function AdminScreen({
                 <option value="name-asc">Name A-Z</option>
                 <option value="batch-desc">Newest batch</option>
               </select>
+              <select className="admin-compact-select" value={peoplePageSize} onChange={(eventObject) => setPeoplePageSize(Number(eventObject.target.value))} aria-label="People per page">
+                <option value="5">5 per page</option>
+                <option value="10">10 per page</option>
+                <option value="25">25 per page</option>
+              </select>
             </div>
           </div>
 
-          {filteredPeople.map((item) => <div className="admin-row" key={item.id}>
-            <span className="admin-person-summary">
-              {item.avatar_image ? <img src={item.avatar_image} alt="" /> : <span className="admin-person-initials">{item.name.slice(0, 2).toUpperCase()}</span>}
-              <span>
-                <strong>{item.name}</strong>
-                <small>Class of {item.batch_year || '—'} · {item.current_company || 'No company'}</small>
-              </span>
-            </span>
-            <div className="row-actions">
-              <select className="role-select" value={item.role || 'alumni'} onChange={(eventObject) => onUpdatePerson(item.user_id || item.id, { role: eventObject.target.value })}>
-                <option value="alumni">Alumni</option>
-                <option value="student">Student</option>
-              </select>
-              <button className="status-button" onClick={() => onUpdatePerson(item.user_id || item.id, { is_active: item.is_active === false })}>
-                {item.is_active === false ? 'Enable' : 'Disable'}
-              </button>
-              <button className="danger-icon" onClick={() => removePerson(item)} aria-label={`Remove ${item.name}`}>×</button>
-            </div>
-          </div>)}
+          <div className="admin-bulk-toolbar"><label><input type="checkbox" checked={allVisiblePeopleSelected} onChange={toggleVisiblePeople} /> Select visible</label><span>{selectedPeople.length} selected</span><button type="button" className="table-action" disabled={!selectedPeople.length} onClick={() => bulkUpdatePeople(true)}>Enable</button><button type="button" className="table-action danger-table-action" disabled={!selectedPeople.length} onClick={() => bulkUpdatePeople(false)}>Disable</button></div>
+          <div className="admin-table people-table" role="table" aria-label="People directory"><div className="admin-table-row admin-table-head" role="row"><span>Person</span><span>Class and company</span><span>Role</span><span>Account</span><span>Actions</span></div>{visiblePeople.map((item) => { const personId = item.user_id || item.id; return <div className="admin-table-row" role="row" key={item.id}><span className="admin-person-summary"><input type="checkbox" checked={selectedPeople.includes(personId)} onChange={() => togglePersonSelection(personId)} aria-label={`Select ${item.name || 'member'}`} />{item.avatar_image ? <img src={item.avatar_image} alt="" /> : <span className="admin-person-initials">{String(item.name || 'Unknown person').slice(0, 2).toUpperCase()}</span>}<strong>{item.name || 'Unknown person'}</strong><small className="table-updated">{updatedLabel(item)}</small></span><span>Class of {item.batch_year || '—'} · {item.current_company || 'No company'}<small className="table-updated">{updatedLabel(item)}</small></span><span><select className="role-select" value={item.role || 'alumni'} onChange={(eventObject) => changePersonRole(item, eventObject.target.value)}><option value="alumni">Alumni</option><option value="student">Student</option></select></span><span className="table-status">{item.is_active === false ? 'Disabled' : 'Active'}</span><span className="row-actions"><button className="status-button icon-action-button" onClick={() => onUpdatePerson(personId, { is_active: item.is_active === false })} aria-label={`${item.is_active === false ? 'Enable' : 'Disable'} ${item.name || 'member'}`} title={`${item.is_active === false ? 'Enable' : 'Disable'} ${item.name || 'member'}`}>{item.is_active === false ? '✓' : '⊘'}</button><button className="danger-icon icon-action-button" onClick={() => removePerson(item)} aria-label={`Remove ${item.name}`} title={`Remove ${item.name}`}>×</button></span></div>; })}</div>
+          {peoplePageCount > 1 && <div className="admin-pagination"><span>Page {peoplePage} of {peoplePageCount}</span><div><button type="button" className="table-action" onClick={() => setPeoplePage((page) => Math.max(1, page - 1))} disabled={peoplePage === 1}>Previous</button><button type="button" className="table-action" onClick={() => setPeoplePage((page) => Math.min(peoplePageCount, page + 1))} disabled={peoplePage === peoplePageCount}>Next</button></div></div>}
           {!filteredPeople.length && <p className="empty-state">No people match this view.</p>}
-        </div>
+        </div>}
       </div>
-    </div>
+    </div>}
+
+    {isSuperAdmin && activeSection === 'organizations' && <section className="superadmin-panel" id="admin-organizations">
+      <div className="screen-heading compact-heading"><div><span className="section-kicker">PLATFORM MANAGEMENT</span><h2>Organizations and subscriptions</h2><p>Manage plan access, billing status, and Chapter capabilities for every school, college, or company.</p></div><span className="admin-badge">{organizations.length} ORGANIZATIONS</span></div>
+      {!organizations.length && <p className="empty-state">No organizations have been created yet.</p>}
+      {organizations.map((organization) => <div className="superadmin-row" key={organization.id}><div><strong>{organization.name}</strong><small>{organization.organization_type || 'school'} · {organization.member_count || 0} members · {organization.contact_email || 'No contact email'}</small><div className="feature-toggles">{managedFeatures.map(([feature, label]) => <label key={feature}><input type="checkbox" checked={organizationFeatures(organization)[feature]} onChange={(eventObject) => onChangeOrganization(organization.id, { features: { ...organizationFeatures(organization), [feature]: eventObject.target.checked } })} />{label}</label>)}</div></div><div className="superadmin-controls"><select value={organization.subscription_plan || 'community'} onChange={(eventObject) => onChangeOrganization(organization.id, { subscription_plan: eventObject.target.value })} aria-label={`Plan for ${organization.name}`}><option value="community">Community</option><option value="chapter">Chapter</option></select><select value={organization.subscription_status || 'active'} onChange={(eventObject) => onChangeOrganization(organization.id, { subscription_status: eventObject.target.value })} aria-label={`Status for ${organization.name}`}><option value="pending">Pending</option><option value="active">Active</option><option value="past_due">Past due</option><option value="cancelled">Cancelled</option><option value="expired">Expired</option></select><input type="number" min="1" value={organization.member_limit || 500} onChange={(eventObject) => onChangeOrganization(organization.id, { member_limit: Number(eventObject.target.value) })} aria-label={`Member limit for ${organization.name}`} /></div></div>)}
+    </section>}
+
+    {isSuperAdmin && activeSection === 'requests' && <section className="superadmin-panel" id="admin-requests">
+      <div className="screen-heading compact-heading"><div><span className="section-kicker">INBOX</span><h2>Chapter requests</h2><p>Review organizations that contacted the Alumni Meet team about Chapter access.</p></div><span className="admin-badge">{contactMessages.length} REQUESTS</span></div>
+      {!contactMessages.length && <p className="empty-state">No contact requests yet.</p>}
+      {contactMessages.map((message) => <div className="superadmin-row" key={message.id}><div><strong>{message.subject || 'Contact request'}</strong><small>{message.name} · {message.email} · {message.organization || 'Organization not provided'}</small></div><select value={message.status || 'new'} onChange={(eventObject) => onChangeContactStatus(message.id, eventObject.target.value)} aria-label={`Status for ${message.subject || 'contact request'}`}><option value="new">New</option><option value="contacted">Contacted</option><option value="proposal_sent">Proposal sent</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="closed">Closed</option></select></div>)}
+    </section>}
 
     {modalOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(eventObject) => { if (eventObject.target === eventObject.currentTarget) cancelEdit(); }}>
       <form className="admin-form event-modal" onSubmit={submit}>

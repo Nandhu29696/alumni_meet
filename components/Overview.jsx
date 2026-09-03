@@ -1,7 +1,7 @@
 import EventCard from './EventCard';
 
 export default function Overview({ events, people, registered, onRsvp, onOpen, setActive }) {
-  return <>
+  return <div className="overview-screen">
     <div className="welcome-band">
       <div>
         <span className="welcome-label">THE HALLWAY</span>
@@ -50,5 +50,5 @@ export default function Overview({ events, people, registered, onRsvp, onOpen, s
         onRsvp={onRsvp} onOpen={onOpen} />
     )}
     </div>
-  </>;
+  </div>;
 }

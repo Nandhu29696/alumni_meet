@@ -27,6 +27,20 @@
       }
     }
   },
+  "/about": {
+    "hints": 64,
+    "slots": {
+      "children": {
+        "hints": 96,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
   "/check-in": {
     "hints": 64,
     "slots": {
@@ -56,6 +70,20 @@
     }
   },
   "/login": {
+    "hints": 64,
+    "slots": {
+      "children": {
+        "hints": 96,
+        "slots": {
+          "children": {
+            "hints": 160,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "/onboard": {
     "hints": 64,
     "slots": {
       "children": {

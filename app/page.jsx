@@ -12,6 +12,8 @@ import {
   getAlumni,
   getAlumniProfile,
   getAnalytics,
+  getAdminContactMessages,
+  getAdminOrganizations,
   getAttendance,
   toggleFollow,
   getEvent,
@@ -21,6 +23,8 @@ import {
   refreshSession,
   rsvp,
   updateEvent,
+  updateAdminContactMessage,
+  updateAdminOrganization,
   updateProfile,
   updatePerson,
   uploadProfileImages
@@ -38,6 +42,7 @@ import Shell, { ProfileMenu } from '../components/Shell';
 import ToastStack from '../components/ToastStack';
 import { clearAuth, setTokens, setUser as setAuthUser } from '../store/authSlice';
 import { getAccessToken, getRefreshToken } from '../utils/auth';
+import PublicHome from '../components/PublicHome';
 
 const tabs = [['Overview', '◒'], ['Alumni directory', '◌'], ['Events', '▣'], ['My events', '□'], ['My profile', '◉']];
 
@@ -60,6 +65,7 @@ function errorMessage(error, fallback) {
 
 export default function Home() {
   const dispatch = useDispatch();
+  const [publicView, setPublicView] = useState(null);
   const [active, setActive] = useState('Overview');
   const [query, setQuery] = useState('');
   const [people, setPeople] = useState([]);
@@ -76,6 +82,8 @@ export default function Home() {
   const [alumniHasMore, setAlumniHasMore] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [confirmState, setConfirmState] = useState(null);
+  const [organizations, setOrganizations] = useState([]);
+  const [contactMessages, setContactMessages] = useState([]);
 
   function notify(type, message) {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -108,6 +116,12 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (!getAccessToken()) {
+      setPublicView(true);
+      setLoading(false);
+      return;
+    }
+    setPublicView(false);
     (async () => {
       try {
         let profile;
@@ -126,10 +140,20 @@ export default function Home() {
           window.location.assign('/onboard');
           return;
         }
-        if (profile.role === 'admin' || profile.role === 'super_admin' || profile.role === 'tenant_admin') {
-          const [attendanceData, analyticsData] = await Promise.all([getAttendance(), getAnalytics()]);
+        const chapterFeatures = new Set(profile.features || []);
+        const canUseChapterReports = profile.role === 'admin' || profile.role === 'super_admin' || chapterFeatures.has('attendance_export');
+        const canUseAnalytics = profile.role === 'admin' || profile.role === 'super_admin' || chapterFeatures.has('analytics');
+        if (canUseChapterReports) {
+          const attendanceData = await getAttendance();
           setAttendance(attendanceData.results);
-          setAnalytics(analyticsData);
+        }
+        if (canUseAnalytics) {
+          setAnalytics(await getAnalytics());
+        }
+        if (profile.role === 'super_admin') {
+          const [organizationData, contactData] = await Promise.all([getAdminOrganizations(), getAdminContactMessages()]);
+          setOrganizations(organizationData.results);
+          setContactMessages(contactData.results);
         }
 
         const [peopleData, eventsData, mine] = await Promise.all([getAlumni(), getEvents(), getMyEvents()]);
@@ -145,6 +169,9 @@ export default function Home() {
       }
     })();
   }, []);
+
+  if (publicView === null) return <main className="public-auth-loading" aria-label="Loading Alumni Meet"><span className="public-brand-mark">AM</span></main>;
+  if (publicView) return <PublicHome />;
 
   async function saveProfile(profile) {
     try {
@@ -345,8 +372,29 @@ export default function Home() {
     }
   }
 
+  async function changeOrganization(organizationId, details) {
+    try {
+      const updated = await updateAdminOrganization(organizationId, details);
+      setOrganizations((current) => current.map((item) => item.id === organizationId ? { ...item, ...updated } : item));
+      notify('success', 'Organization settings updated.');
+    } catch (error) {
+      notify('error', errorMessage(error, 'Could not update organization settings.'));
+    }
+  }
+
+  async function changeContactStatus(messageId, status) {
+    try {
+      const updated = await updateAdminContactMessage(messageId, status);
+      setContactMessages((current) => current.map((item) => item.id === messageId ? { ...item, ...updated } : item));
+      notify('success', 'Request status updated.');
+    } catch (error) {
+      notify('error', errorMessage(error, 'Could not update request status.'));
+    }
+  }
+
   const admin = user.role === 'admin' || user.role === 'super_admin' || user.role === 'tenant_admin';
-  const navTabs = admin ? [...tabs, ['Admin console', '◆']] : tabs;
+  const chapterAdmin = user.role === 'admin' || user.role === 'super_admin' || user.features?.includes('member_management');
+  const navTabs = chapterAdmin ? [...tabs, ['Admin console', '◆']] : tabs;
   const title = active === 'Overview' ? `${timeGreeting()}, ${user.name?.split(' ')[0] || 'there'}` : active;
 
   let screen;
@@ -374,7 +422,7 @@ export default function Home() {
     screen = <ProfileScreen user={user} onSave={saveProfile} onUploadImages={saveProfileImages} />;
   }
 
-  if (!selectedEvent && !selectedPerson && active === 'Admin console' && admin) {
+  if (!selectedEvent && !selectedPerson && active === 'Admin console' && chapterAdmin) {
     screen = <AdminScreen
       events={events}
       people={people}
@@ -386,6 +434,11 @@ export default function Home() {
       onCheckIn={checkIn}
       attendance={attendance}
       analytics={analytics}
+      organizations={organizations}
+      contactMessages={contactMessages}
+      isSuperAdmin={user.role === 'super_admin'}
+      onChangeOrganization={changeOrganization}
+      onChangeContactStatus={changeContactStatus}
       onLoadAttendance={loadAttendance}
       onNotify={notify}
       onConfirm={requestConfirm}
@@ -403,7 +456,7 @@ export default function Home() {
             </div>
             <div className="top-actions">
               <ProfileMenu user={user} onProfile={() => setActive('My profile')} onSignOut={async () => {
-                try { await logout(); } finally { dispatch(clearAuth()); window.location.assign('/login'); }
+                try { await logout(); } finally { dispatch(clearAuth()); window.location.assign('/'); }
               }} />
             </div>
           </header>

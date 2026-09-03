@@ -4,6 +4,8 @@
   "/check-in/page": "/check-in",
   "/forgot-password/page": "/forgot-password",
   "/login/page": "/login",
+  "/onboard/page": "/onboard",
   "/page": "/",
-  "/register/page": "/register"
+  "/register/page": "/register",
+  "/about/page": "/about"
 }

@@ -1199,6 +1199,10 @@ __turbopack_context__.s([
     ()=>deletePerson,
     "downloadAttendanceCsv",
     ()=>downloadAttendanceCsv,
+    "getAdminContactMessages",
+    ()=>getAdminContactMessages,
+    "getAdminOrganizations",
+    ()=>getAdminOrganizations,
     "getAlumni",
     ()=>getAlumni,
     "getAlumniProfile",
@@ -1215,6 +1219,8 @@ __turbopack_context__.s([
     ()=>getEvents,
     "getMyEvents",
     ()=>getMyEvents,
+    "getPublicStats",
+    ()=>getPublicStats,
     "login",
     ()=>login,
     "logout",
@@ -1229,8 +1235,14 @@ __turbopack_context__.s([
     ()=>resetPassword,
     "rsvp",
     ()=>rsvp,
+    "sendContactMessage",
+    ()=>sendContactMessage,
     "toggleFollow",
     ()=>toggleFollow,
+    "updateAdminContactMessage",
+    ()=>updateAdminContactMessage,
+    "updateAdminOrganization",
+    ()=>updateAdminOrganization,
     "updateEvent",
     ()=>updateEvent,
     "updatePerson",
@@ -1337,6 +1349,10 @@ async function apiRequest(path, options = {}) {
     const isJson = contentType.includes('application/json') || hasJsonReader && !hasTextReader;
     const data = isJson ? await response.json().catch(()=>({})) : hasTextReader ? await response.text() : {};
     if (!response.ok) {
+        if (response.status === 429) {
+            const retryAfter = response.headers?.get?.('Retry-After');
+            throw new Error(retryAfter ? `Too many attempts. Please try again in ${retryAfter} seconds.` : 'Too many attempts. Please wait a moment and try again.');
+        }
         if (isJson && data && typeof data === 'object') throw new Error(getErrorMessage(data, 'Request failed'));
         throw new Error(typeof data === 'string' && data.trim() || 'Request failed');
     }
@@ -1410,6 +1426,17 @@ const getEvents = (params = {})=>{
 };
 const getEvent = (eventId)=>apiRequest(`/events/${eventId}/`);
 const getAlumni = (page = 1)=>apiRequest(`/alumni/?page=${page}`);
+const getPublicStats = ()=>apiRequest('/public/stats/');
+const sendContactMessage = (details)=>{
+    const form = new FormData();
+    Object.entries(details).forEach(([key, value])=>{
+        if (value !== null && value !== undefined) form.append(key, value);
+    });
+    return apiRequest('/contact/', {
+        method: 'POST',
+        body: form
+    });
+};
 const getAlumniProfile = (personId)=>apiRequest(`/alumni/${personId}/`);
 const toggleFollow = (personId)=>apiRequest(`/alumni/${personId}/follow/`, {
         method: 'POST'
@@ -1426,6 +1453,18 @@ const cancelRsvp = (eventId)=>apiRequest(`/events/${eventId}/register/`, {
 const getMyEvents = ()=>apiRequest('/my-events/');
 const getAttendance = ()=>apiRequest('/admin/attendance/');
 const getAnalytics = ()=>apiRequest('/admin/analytics/');
+const getAdminOrganizations = ()=>apiRequest('/admin/organizations/');
+const updateAdminOrganization = (organizationId, details)=>apiRequest(`/admin/organizations/${organizationId}/`, {
+        method: 'PATCH',
+        body: JSON.stringify(details)
+    });
+const getAdminContactMessages = ()=>apiRequest('/admin/contact-messages/');
+const updateAdminContactMessage = (messageId, status)=>apiRequest(`/admin/contact-messages/${messageId}/`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+            status
+        })
+    });
 const updatePerson = (personId, person)=>apiRequest(`/admin/people/${personId}/`, {
         method: 'PUT',
         body: JSON.stringify(person)

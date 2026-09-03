@@ -86,6 +86,10 @@ export async function apiRequest(path, options = {}) {
       : {};
 
   if (!response.ok) {
+    if (response.status === 429) {
+      const retryAfter = response.headers?.get?.('Retry-After');
+      throw new Error(retryAfter ? `Too many attempts. Please try again in ${retryAfter} seconds.` : 'Too many attempts. Please wait a moment and try again.');
+    }
     if (isJson && data && typeof data === 'object') throw new Error(getErrorMessage(data, 'Request failed'));
     throw new Error((typeof data === 'string' && data.trim()) || 'Request failed');
   }
@@ -139,6 +143,14 @@ export const getEvents = (params = {}) => {
 };
 export const getEvent = (eventId) => apiRequest(`/events/${eventId}/`);
 export const getAlumni = (page = 1) => apiRequest(`/alumni/?page=${page}`);
+export const getPublicStats = () => apiRequest('/public/stats/');
+export const sendContactMessage = (details) => {
+  const form = new FormData();
+  Object.entries(details).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) form.append(key, value);
+  });
+  return apiRequest('/contact/', { method: 'POST', body: form });
+};
 export const getAlumniProfile = (personId) => apiRequest(`/alumni/${personId}/`);
 export const toggleFollow = (personId) => apiRequest(`/alumni/${personId}/follow/`, { method: 'POST' });
 export const rsvp = (eventId) => apiRequest(`/events/${eventId}/register/`, { method: 'POST' });
@@ -146,6 +158,10 @@ export const cancelRsvp = (eventId) => apiRequest(`/events/${eventId}/register/`
 export const getMyEvents = () => apiRequest('/my-events/');
 export const getAttendance = () => apiRequest('/admin/attendance/');
 export const getAnalytics = () => apiRequest('/admin/analytics/');
+export const getAdminOrganizations = () => apiRequest('/admin/organizations/');
+export const updateAdminOrganization = (organizationId, details) => apiRequest(`/admin/organizations/${organizationId}/`, { method: 'PATCH', body: JSON.stringify(details) });
+export const getAdminContactMessages = () => apiRequest('/admin/contact-messages/');
+export const updateAdminContactMessage = (messageId, status) => apiRequest(`/admin/contact-messages/${messageId}/`, { method: 'PATCH', body: JSON.stringify({ status }) });
 export const updatePerson = (personId, person) => apiRequest(`/admin/people/${personId}/`, { method: 'PUT', body: JSON.stringify(person) });
 export async function downloadAttendanceCsv() {
   const response = await fetch(`${API_URL}/admin/attendance/?download=csv`, { credentials: 'include' });

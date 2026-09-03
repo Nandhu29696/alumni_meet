@@ -1,10 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function initials(name = '') { return name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase(); }
 
 export default function DirectoryScreen({ people, query, setQuery, onOpen, hasMore, onLoadMore, loading = false }) {
   const [view, setView] = useState('grid');
-  const filtered = useMemo(() => people.filter((person) => `${person.name} ${person.current_company} ${person.batch_year} ${person.location}`.toLowerCase().includes(query.toLowerCase())), [people, query]);
+  const [page, setPage] = useState(1);
+  const [gridPage, setGridPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const gridPageSize = 8;
+  const filtered = useMemo(() => people.filter((person) => `${person.name} ${person.current_company} ${person.batch_year} ${person.location} ${person.email} ${person.phone_number}`.toLowerCase().includes(query.toLowerCase())), [people, query]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const gridPageCount = Math.max(1, Math.ceil(filtered.length / gridPageSize));
+  const visiblePeople = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const visibleGridPeople = filtered.slice((gridPage - 1) * gridPageSize, gridPage * gridPageSize);
+
+  useEffect(() => {
+    setPage(1);
+    setGridPage(1);
+  }, [query, pageSize]);
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
+
+  useEffect(() => {
+    setGridPage((current) => Math.min(current, gridPageCount));
+  }, [gridPageCount]);
+
+  function changePageSize(value) {
+    setPageSize(Number(value));
+    setPage(1);
+  }
 
   return <>
     <div className="screen-heading">
@@ -29,7 +55,7 @@ export default function DirectoryScreen({ people, query, setQuery, onOpen, hasMo
       {Array.from({ length: 8 }).map((_, index) => <article className="alumni-card skeleton-card" key={index} />)}
     </div> : view === 'grid' ? <>
       <div className="alumni-grid directory-grid">
-        {filtered.map((person) => <article className="alumni-card" key={person.id || person.name}>
+        {visibleGridPeople.map((person) => <article className="alumni-card" key={person.id || person.name}>
           <div className="avatar avatar-large teal">{person.avatar_image ? <img src={person.avatar_image} alt={person.name} /> : initials(person.name)}</div>
           <h3>{person.name}</h3>
           <p>{person.job_title || 'Alumni member'}{person.current_company ? <> at <strong>{person.current_company}</strong></> : null}</p>
@@ -38,16 +64,19 @@ export default function DirectoryScreen({ people, query, setQuery, onOpen, hasMo
         </article>)}
       </div>
       {!filtered.length && <div className="empty-state">No directory results. Try a different search.</div>}
+      {filtered.length > 0 && <div className="directory-pagination grid-pagination"><span>Page {gridPage} of {gridPageCount}</span><div><button className="table-action" onClick={() => setGridPage((current) => Math.max(1, current - 1))} type="button" disabled={gridPage === 1}>Previous</button><button className="table-action" onClick={() => setGridPage((current) => Math.min(gridPageCount, current + 1))} type="button" disabled={gridPage === gridPageCount}>Next</button></div></div>}
     </> : <>
       <div className="data-table-wrap">
         <table className="data-table data-table-cards">
           <thead>
-            <tr><th>Person</th><th>Role</th><th>Company</th><th>Class</th><th>Location</th><th>Action</th></tr>
+            <tr><th>Person</th><th>Role</th><th>Email</th><th>Contact</th><th>Company</th><th>Class</th><th>Location</th><th>Action</th></tr>
           </thead>
           <tbody>
-            {filtered.map((person) => <tr key={person.id || person.name} onClick={() => onOpen(person)}>
+            {visiblePeople.map((person) => <tr key={person.id || person.name} onClick={() => onOpen(person)}>
               <td data-label="Person"><div className="table-person">{person.avatar_image ? <img src={person.avatar_image} alt="" /> : <span>{initials(person.name)}</span>}<strong>{person.name}</strong></div></td>
               <td data-label="Role">{person.job_title || 'Alumni member'}</td>
+              <td data-label="Email">{person.email || '—'}</td>
+              <td data-label="Contact">{person.phone_number ? `${person.phone_country_code || ''} ${person.phone_number}`.trim() : '—'}</td>
               <td data-label="Company">{person.current_company || '—'}</td>
               <td data-label="Class">{person.batch_year || '—'}</td>
               <td data-label="Location">{person.location || 'India'}</td>
@@ -57,6 +86,7 @@ export default function DirectoryScreen({ people, query, setQuery, onOpen, hasMo
         </table>
       </div>
       {!filtered.length && <div className="empty-state">No directory rows to show in table view.</div>}
+      {filtered.length > 0 && <div className="directory-pagination"><label>Rows <select value={pageSize} onChange={(event) => changePageSize(event.target.value)} aria-label="Directory rows per page"><option value="5">5</option><option value="10">10</option><option value="25">25</option></select></label><span>Page {page} of {pageCount}</span><div><button className="table-action" onClick={() => setPage((current) => Math.max(1, current - 1))} type="button" disabled={page === 1}>Previous</button><button className="table-action" onClick={() => setPage((current) => Math.min(pageCount, current + 1))} type="button" disabled={page === pageCount}>Next</button></div></div>}
     </>}
 
     {hasMore && !loading && <div className="pagination-controls">

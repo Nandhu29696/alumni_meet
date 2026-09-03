@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Alumni Meet</title>
+  <desc id="desc">A connected community mark made from three people</desc>
+  <rect width="128" height="128" rx="28" fill="#244b3a"/>
+  <path d="M25 72c10-13 19-20 29-20s19 7 29 20M45 72c8-9 15-14 23-14s15 5 23 14" fill="none" stroke="#d9ed58" stroke-linecap="round" stroke-width="7"/>
+  <circle cx="39" cy="43" r="11" fill="#e7b08b"/>
+  <circle cx="64" cy="34" r="13" fill="#d9ed58"/>
+  <circle cx="91" cy="43" r="11" fill="#a8c8bc"/>
+  <path d="M31 91h66" stroke="#fff" stroke-linecap="round" stroke-width="5"/>
+</svg>

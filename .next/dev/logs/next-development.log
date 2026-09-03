@@ -1,11 +1,100 @@
-{"timestamp":"00:00:28.757","source":"Server","level":"LOG","message":""}
-{"timestamp":"00:01:25.682","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:01:28.132","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:01:45.676","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:02:07.810","source":"Browser","level":"ERROR","message":"Uncaught TypeError: Cannot read properties of undefined (reading 'toLowerCase')\n    at AdminScreen.useMemo[filteredPeople].byQuery (components/AdminScreen.jsx:98:59)\n    at Array.filter (<anonymous>)\n    at AdminScreen.useMemo[filteredPeople] (components/AdminScreen.jsx:98:28)\n    at AdminScreen (components/AdminScreen.jsx:97:33)\n    at Home (app/page.jsx:378:14)\n  \u001b[90m 96 |\u001b[0m ...\n  \u001b[90m 97 |\u001b[0m ...(() => {\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m 98 |\u001b[0m ...r((person) => person.name.toLowerCase().includes(peop...\n  \u001b[90m    |\u001b[0m                              \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m 99 |\u001b[0m ...ter === \u001b[32m'all'\u001b[0m ? byQuery : byQuery.filter((person) => ...\n  \u001b[90m100 |\u001b[0m ...ilter === \u001b[32m'all'\u001b[0m\n  \u001b[90m101 |\u001b[0m ..."}
-{"timestamp":"00:02:07.811","source":"Server","level":"ERROR","message":"[browser] \"\\u001b[31mUncaught TypeError: Cannot read properties of undefined (reading 'toLowerCase')\\u001b[39m\\n\\u001b[31m    at AdminScreen.useMemo[filteredPeople].byQuery (components/AdminScreen.jsx:98:59)\\n    at Array.filter (<anonymous>)\\n    at AdminScreen.useMemo[filteredPeople] (components/AdminScreen.jsx:98:28)\\n    at AdminScreen (components/AdminScreen.jsx:97:33)\\n    at Home (app/page.jsx:378:14)\\u001b[39m\\n  \\u001b[90m 96 |\\u001b[0m ...\\n  \\u001b[90m 97 |\\u001b[0m ...(() => {\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m 98 |\\u001b[0m ...r((person) => person.name.toLowerCase().includes(peop...\\n  \\u001b[90m    |\\u001b[0m                              \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m 99 |\\u001b[0m ...ter === \\u001b[32m'all'\\u001b[0m ? byQuery : byQuery.filter((person) => ...\\n  \\u001b[90m100 |\\u001b[0m ...ilter === \\u001b[32m'all'\\u001b[0m\\n  \\u001b[90m101 |\\u001b[0m ...\""}
-{"timestamp":"00:02:54.937","source":"Server","level":"LOG","message":"✓ Compiled in 14.7s"}
-{"timestamp":"00:02:55.064","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
-{"timestamp":"00:02:56.301","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
-{"timestamp":"00:05:44.488","source":"Browser","level":"ERROR","message":"Uncaught TypeError: Cannot read properties of undefined (reading 'slice')\n    at <unknown> (components/AdminScreen.jsx:370:128)\n    at Array.map (<anonymous>)\n    at AdminScreen (components/AdminScreen.jsx:368:27)\n    at Home (app/page.jsx:378:14)\n  \u001b[90m368 |\u001b[0m ...\n  \u001b[90m369 |\u001b[0m ...\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m370 |\u001b[0m ...\u001b[32mrson-initials\"\u001b[0m>{item.name.slice(\u001b[35m0\u001b[0m, \u001b[35m2\u001b[0m).toUpperCase()}<...\n  \u001b[90m    |\u001b[0m                              \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m371 |\u001b[0m ...\n  \u001b[90m372 |\u001b[0m ...\n  \u001b[90m373 |\u001b[0m .../small>"}
-{"timestamp":"00:05:44.489","source":"Server","level":"ERROR","message":"[browser] \"\\u001b[31mUncaught TypeError: Cannot read properties of undefined (reading 'slice')\\u001b[39m\\n\\u001b[31m    at <unknown> (components/AdminScreen.jsx:370:128)\\n    at Array.map (<anonymous>)\\n    at AdminScreen (components/AdminScreen.jsx:368:27)\\n    at Home (app/page.jsx:378:14)\\u001b[39m\\n  \\u001b[90m368 |\\u001b[0m ...\\n  \\u001b[90m369 |\\u001b[0m ...\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m370 |\\u001b[0m ...\\u001b[32mrson-initials\\\"\\u001b[0m>{item.name.slice(\\u001b[35m0\\u001b[0m, \\u001b[35m2\\u001b[0m).toUpperCase()}<...\\n  \\u001b[90m    |\\u001b[0m                              \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m371 |\\u001b[0m ...\\n  \\u001b[90m372 |\\u001b[0m ...\\n  \\u001b[90m373 |\\u001b[0m .../small>\""}
+{"timestamp":"00:00:04.564","source":"Server","level":"WARN","message":"⚠ Slow filesystem detected. The benchmark took 321ms. If \\\\?\\D:\\Suga S AI Tech\\alumni_meet\\frontend\\.next\\dev is a network drive, consider moving it to a local folder.\nSee more: https://nextjs.org/docs/app/guides/local-development"}
+{"timestamp":"00:00:07.121","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:13.709","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:10:17.401","source":"Server","level":"LOG","message":"✓ Compiled in 1425ms"}
+{"timestamp":"00:11:57.287","source":"Server","level":"LOG","message":"✓ Compiled in 350ms"}
+{"timestamp":"00:12:36.857","source":"Server","level":"LOG","message":"✓ Compiled in 370ms"}
+{"timestamp":"00:14:28.225","source":"Server","level":"LOG","message":"✓ Compiled in 301ms"}
+{"timestamp":"00:14:59.931","source":"Server","level":"LOG","message":"✓ Compiled in 207ms"}
+{"timestamp":"00:16:46.161","source":"Server","level":"LOG","message":"✓ Compiled in 661ms"}
+{"timestamp":"00:18:51.657","source":"Server","level":"LOG","message":"✓ Compiled in 170ms"}
+{"timestamp":"00:21:49.029","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:21:53.341","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:22:09.464","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:29:23.207","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"01:47:02.912","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"01:58:37.475","source":"Server","level":"LOG","message":"✓ Compiled in 110ms"}
+{"timestamp":"01:59:53.386","source":"Server","level":"LOG","message":"✓ Compiled in 113ms"}
+{"timestamp":"02:20:19.072","source":"Server","level":"LOG","message":"✓ Compiled in 81ms"}
+{"timestamp":"02:52:50.294","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"02:52:56.514","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"02:53:33.512","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"03:38:58.381","source":"Server","level":"LOG","message":"✓ Compiled in 369ms"}
+{"timestamp":"03:40:34.555","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"03:41:19.281","source":"Server","level":"LOG","message":"✓ Compiled in 111ms"}
+{"timestamp":"03:43:13.168","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"03:43:34.165","source":"Server","level":"LOG","message":"✓ Compiled in 50ms"}
+{"timestamp":"03:43:54.290","source":"Server","level":"LOG","message":"✓ Compiled in 140ms"}
+{"timestamp":"03:44:00.428","source":"Server","level":"LOG","message":"✓ Compiled in 77ms"}
+{"timestamp":"03:45:09.690","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"03:45:24.144","source":"Server","level":"LOG","message":"✓ Compiled in 50ms"}
+{"timestamp":"03:48:27.795","source":"Server","level":"LOG","message":"✓ Compiled in 58ms"}
+{"timestamp":"03:48:32.105","source":"Server","level":"LOG","message":"✓ Compiled in 70ms"}
+{"timestamp":"03:48:35.958","source":"Server","level":"LOG","message":"✓ Compiled in 81ms"}
+{"timestamp":"03:50:28.939","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"05:11:40.715","source":"Server","level":"LOG","message":"✓ Compiled in 355ms"}
+{"timestamp":"05:11:50.850","source":"Server","level":"LOG","message":"✓ Compiled in 409ms"}
+{"timestamp":"05:11:54.866","source":"Server","level":"LOG","message":"✓ Compiled in 117ms"}
+{"timestamp":"05:22:56.824","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"05:34:24.226","source":"Server","level":"LOG","message":"✓ Compiled in 196ms"}
+{"timestamp":"05:52:00.902","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:06:04.192","source":"Server","level":"LOG","message":"✓ Compiled in 162ms"}
+{"timestamp":"06:07:16.485","source":"Server","level":"LOG","message":"✓ Compiled in 127ms"}
+{"timestamp":"06:07:43.487","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:09:30.401","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:17:05.129","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:18:45.295","source":"Server","level":"LOG","message":"✓ Compiled in 91ms"}
+{"timestamp":"06:18:50.516","source":"Server","level":"LOG","message":"✓ Compiled in 48ms"}
+{"timestamp":"06:19:07.825","source":"Server","level":"LOG","message":"✓ Compiled in 83ms"}
+{"timestamp":"06:19:15.578","source":"Server","level":"LOG","message":"✓ Compiled in 122ms"}
+{"timestamp":"06:19:28.792","source":"Server","level":"LOG","message":"✓ Compiled in 82ms"}
+{"timestamp":"06:19:32.329","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:20:21.073","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:20:21.506","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"06:21:10.244","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:00:29.228","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:01:26.177","source":"Server","level":"LOG","message":"✓ Compiled in 466ms"}
+{"timestamp":"10:02:34.192","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:02:44.573","source":"Server","level":"LOG","message":"✓ Compiled in 198ms"}
+{"timestamp":"10:02:51.405","source":"Server","level":"LOG","message":"✓ Compiled in 383ms"}
+{"timestamp":"10:04:18.214","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:05:29.231","source":"Server","level":"LOG","message":"✓ Compiled in 199ms"}
+{"timestamp":"10:05:34.445","source":"Server","level":"LOG","message":"✓ Compiled in 133ms"}
+{"timestamp":"10:05:40.929","source":"Server","level":"LOG","message":"✓ Compiled in 175ms"}
+{"timestamp":"10:06:51.222","source":"Browser","level":"ERROR","message":"The final argument passed to useEffect changed size between renders. The order and size of this array must remain constant.\n\nPrevious: [, all, date-desc]\nIncoming: [, all, date-desc, 10] \n    at AdminScreen (components/AdminScreen.jsx:132:12)\n    at Set.forEach (<anonymous>)\n  \u001b[90m130 |\u001b[0m   }, [people, peopleQuery, peopleRoleFilter, peopleStateFilter, ...\n  \u001b[90m131 |\u001b[0m\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m132 |\u001b[0m   useEffect(() => {\n  \u001b[90m    |\u001b[0m            \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m133 |\u001b[0m     setEventPage(\u001b[35m1\u001b[0m);\n  \u001b[90m134 |\u001b[0m   }, [eventQuery, eventStatusFilter, eventSort, eventPageSize]);\n  \u001b[90m135 |\u001b[0m (components/AdminScreen.jsx:132:12)"}
+{"timestamp":"10:06:51.242","source":"Server","level":"ERROR","message":"[browser] \"The final argument passed to useEffect changed size between renders. The order and size of this array must remain constant.\\n\\nPrevious: [, all, date-desc]\\nIncoming: [, all, date-desc, 10]\" \"\\n\\u001b[31m    at AdminScreen (components/AdminScreen.jsx:132:12)\\n    at Set.forEach (<anonymous>)\\u001b[39m\\n  \\u001b[90m130 |\\u001b[0m   }, [people, peopleQuery, peopleRoleFilter, peopleStateFilter, ...\\n  \\u001b[90m131 |\\u001b[0m\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m132 |\\u001b[0m   useEffect(() => {\\n  \\u001b[90m    |\\u001b[0m            \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m133 |\\u001b[0m     setEventPage(\\u001b[35m1\\u001b[0m);\\n  \\u001b[90m134 |\\u001b[0m   }, [eventQuery, eventStatusFilter, eventSort, eventPageSize]);\\n  \\u001b[90m135 |\\u001b[0m\" \"\\u001b[2m(components/AdminScreen.jsx:132:12)\\u001b[22m\""}
+{"timestamp":"10:06:51.247","source":"Browser","level":"ERROR","message":"The final argument passed to useEffect changed size between renders. The order and size of this array must remain constant.\n\nPrevious: [, all, all, name-asc]\nIncoming: [, all, all, name-asc, 10] \n    at AdminScreen (components/AdminScreen.jsx:136:12)\n    at Set.forEach (<anonymous>)\n  \u001b[90m134 |\u001b[0m   }, [eventQuery, eventStatusFilter, eventSort, eventPageSize]);\n  \u001b[90m135 |\u001b[0m\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m136 |\u001b[0m   useEffect(() => {\n  \u001b[90m    |\u001b[0m            \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m137 |\u001b[0m     setPeoplePage(\u001b[35m1\u001b[0m);\n  \u001b[90m138 |\u001b[0m   }, [peopleQuery, peopleRoleFilter, peopleStateFilter, peopleSo...\n  \u001b[90m139 |\u001b[0m (components/AdminScreen.jsx:136:12)"}
+{"timestamp":"10:06:51.248","source":"Server","level":"ERROR","message":"[browser] \"The final argument passed to useEffect changed size between renders. The order and size of this array must remain constant.\\n\\nPrevious: [, all, all, name-asc]\\nIncoming: [, all, all, name-asc, 10]\" \"\\n\\u001b[31m    at AdminScreen (components/AdminScreen.jsx:136:12)\\n    at Set.forEach (<anonymous>)\\u001b[39m\\n  \\u001b[90m134 |\\u001b[0m   }, [eventQuery, eventStatusFilter, eventSort, eventPageSize]);\\n  \\u001b[90m135 |\\u001b[0m\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m136 |\\u001b[0m   useEffect(() => {\\n  \\u001b[90m    |\\u001b[0m            \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m137 |\\u001b[0m     setPeoplePage(\\u001b[35m1\\u001b[0m);\\n  \\u001b[90m138 |\\u001b[0m   }, [peopleQuery, peopleRoleFilter, peopleStateFilter, peopleSo...\\n  \\u001b[90m139 |\\u001b[0m\" \"\\u001b[2m(components/AdminScreen.jsx:136:12)\\u001b[22m\""}
+{"timestamp":"10:07:12.332","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:07:42.582","source":"Server","level":"LOG","message":"✓ Compiled in 172ms"}
+{"timestamp":"10:07:44.008","source":"Server","level":"LOG","message":"✓ Compiled in 332ms"}
+{"timestamp":"10:10:24.895","source":"Server","level":"LOG","message":"✓ Compiled in 341ms"}
+{"timestamp":"10:10:52.131","source":"Server","level":"LOG","message":"✓ Compiled in 374ms"}
+{"timestamp":"10:10:59.876","source":"Server","level":"LOG","message":"✓ Compiled in 351ms"}
+{"timestamp":"10:11:11.769","source":"Server","level":"LOG","message":"✓ Compiled in 148ms"}
+{"timestamp":"10:12:28.713","source":"Server","level":"LOG","message":"✓ Compiled in 882ms"}
+{"timestamp":"10:13:40.434","source":"Server","level":"LOG","message":"✓ Compiled in 290ms"}
+{"timestamp":"10:14:07.451","source":"Server","level":"LOG","message":"✓ Compiled in 98ms"}
+{"timestamp":"10:14:15.133","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:14:23.891","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:14:39.646","source":"Server","level":"LOG","message":"✓ Compiled in 625ms"}
+{"timestamp":"10:16:17.501","source":"Server","level":"LOG","message":"✓ Compiled in 911ms"}
+{"timestamp":"10:17:32.425","source":"Server","level":"LOG","message":"✓ Compiled in 525ms"}
+{"timestamp":"10:19:41.015","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:19:49.524","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:25:34.313","source":"Server","level":"LOG","message":"✓ Compiled in 151ms"}
+{"timestamp":"10:25:43.424","source":"Server","level":"LOG","message":"✓ Compiled in 142ms"}
+{"timestamp":"10:28:21.234","source":"Server","level":"LOG","message":"✓ Compiled in 368ms"}
+{"timestamp":"10:31:22.388","source":"Server","level":"LOG","message":"✓ Compiled in 641ms"}
+{"timestamp":"10:31:27.973","source":"Server","level":"LOG","message":"✓ Compiled in 290ms"}
+{"timestamp":"10:33:27.060","source":"Server","level":"LOG","message":"✓ Compiled in 225ms"}
+{"timestamp":"10:34:26.261","source":"Server","level":"LOG","message":"✓ Compiled in 153ms"}
+{"timestamp":"10:34:52.875","source":"Server","level":"LOG","message":"✓ Compiled in 1688ms"}
+{"timestamp":"10:34:59.000","source":"Server","level":"LOG","message":"✓ Compiled in 145ms"}
+{"timestamp":"10:35:57.952","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"10:36:00.812","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"11:27:52.814","source":"Server","level":"LOG","message":"✓ Compiled in 314ms"}
+{"timestamp":"11:28:58.991","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"11:29:17.416","source":"Server","level":"LOG","message":"✓ Compiled in 117ms"}
+{"timestamp":"11:30:22.008","source":"Server","level":"LOG","message":"✓ Compiled in 159ms"}
+{"timestamp":"11:30:28.016","source":"Server","level":"LOG","message":"✓ Compiled in 142ms"}
