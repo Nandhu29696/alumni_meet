@@ -498,7 +498,7 @@ export default function AdminScreen({
     </section>}
 
     {isSuperAdmin && activeSection === 'requests' && <section className="superadmin-panel" id="admin-requests">
-      <div className="screen-heading compact-heading"><div><span className="section-kicker">INBOX</span><h2>Chapter requests</h2><p>Review organizations that contacted the Alumni Meet team about Chapter access.</p></div><span className="admin-badge">{contactMessages.length} REQUESTS</span></div>
+      <div className="screen-heading compact-heading"><div><span className="section-kicker">INBOX</span><h2>Chapter requests</h2><p>Review organizations that contacted the Philomena’s Digital Connect team about Chapter access.</p></div><span className="admin-badge">{contactMessages.length} REQUESTS</span></div>
       {!contactMessages.length && <p className="empty-state">No contact requests yet.</p>}
       {contactMessages.map((message) => <div className="superadmin-row" key={message.id}><div><strong>{message.subject || 'Contact request'}</strong><small>{message.name} · {message.email} · {message.organization || 'Organization not provided'}</small></div><select value={message.status || 'new'} onChange={(eventObject) => onChangeContactStatus(message.id, eventObject.target.value)} aria-label={`Status for ${message.subject || 'contact request'}`}><option value="new">New</option><option value="contacted">Contacted</option><option value="proposal_sent">Proposal sent</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="closed">Closed</option></select></div>)}
     </section>}

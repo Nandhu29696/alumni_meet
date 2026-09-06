@@ -32,7 +32,7 @@ const communities = [
 
 const testimonials = [
   ['Asha Rao', 'Alumni coordinator', 'Our reunion planning finally feels personal instead of scattered across spreadsheets and chat groups.'],
-  ['Daniel Kim', 'College administrator', 'Students leave with a network, not just a certificate. Alumni Meet helps that relationship continue.'],
+  ['Daniel Kim', 'College administrator', 'Students leave with a network, not just a certificate. Philomena’s Digital Connect helps that relationship continue.'],
   ['Meera Shah', 'People and culture lead', 'It gives former teammates a warm way to stay connected without adding another noisy social feed.']
 ];
 
@@ -88,7 +88,7 @@ export default function PublicHome() {
   return (
     <main className="public-home">
       <nav className="public-nav" aria-label="Public navigation">
-        <a className="public-brand" href="#home" aria-label="Alumni Meet home">
+        <a className="public-brand" href="#home" aria-label="Philomena’s Digital Connect home">
           <span className="public-brand-mark"><img src="/alumni-meet-mark.svg" alt="" /></span>
           <span><strong>Alumni</strong><small>Meet</small></span>
         </a>
@@ -111,7 +111,7 @@ export default function PublicHome() {
         <div className="public-hero-copy">
           <p className="public-overline">Where every chapter stays connected</p>
           <h1>The people who helped shape you are <em>still out there.</em></h1>
-          <p className="public-hero-text">Alumni Meet gives schools, colleges, and companies a thoughtful home to reconnect people, celebrate shared history, and grow what comes next.</p>
+          <p className="public-hero-text">Philomena’s Digital Connect gives schools, colleges, and companies a thoughtful home to reconnect people, celebrate shared history, and grow what comes next.</p>
           <div className="public-hero-actions">
             <Link className="public-primary-button" href="/register">Find your community <span aria-hidden="true">↗</span></Link>
             <a className="public-text-link" href="#about">See how it works <span aria-hidden="true">↓</span></a>
@@ -131,9 +131,9 @@ export default function PublicHome() {
       <section className="public-stats" aria-label="Community statistics"><div><strong>{stats.members || '—'}</strong><span>Members connected</span></div><div><strong>{stats.events || '—'}</strong><span>Events shared</span></div><div><strong>{stats.chapters || '—'}</strong><span>Chapters growing</span></div></section>
 
       <section className="public-statement" id="about">
-        <p className="public-overline">Why Alumni Meet</p>
+        <p className="public-overline">Why Philomena’s Digital Connect</p>
         <h2>Some connections deserve more than a <span>“like.”</span></h2>
-        <p>Whether your shared story began in a classroom, lecture hall, or workplace, Alumni Meet gives your people a reason to come back and a place to keep moving forward together.</p>
+        <p>Whether your shared story began in a classroom, lecture hall, or workplace, Philomena’s Digital Connect gives your people a reason to come back and a place to keep moving forward together.</p>
       </section>
 
       <section className="public-communities" id="communities" aria-labelledby="communities-heading">
@@ -161,7 +161,7 @@ export default function PublicHome() {
       </section>
 
       <section className="public-contact" id="contact"><div className="public-contact-copy"><p className="public-overline">Start a conversation</p><h2>Have a question?<br /><em>We are listening.</em></h2><p>Tell us how we can help your community reconnect. Your message goes directly to our support team.</p><a href={`mailto:${supportEmail}`}>{supportEmail}</a></div><form className="public-contact-form" onSubmit={submitContact}><div className="public-contact-fields"><label>Name *<input required minLength="2" maxLength="100" value={contactForm.name} onChange={(event) => setContactForm({ ...contactForm, name: event.target.value })} /></label><label>Email *<input required type="email" value={contactForm.email} onChange={(event) => setContactForm({ ...contactForm, email: event.target.value })} /></label><label>Subject *<input required minLength="3" maxLength="150" value={contactForm.subject} onChange={(event) => setContactForm({ ...contactForm, subject: event.target.value })} /></label><label>Inquiry type *<select required value={contactForm.inquiry_type} onChange={(event) => setContactForm({ ...contactForm, inquiry_type: event.target.value })}><option value="support">Technical support</option><option value="school_onboarding">School onboarding</option><option value="event_help">Event help</option><option value="feedback">Feedback</option><option value="other">Other</option></select></label><label>College or organization<input maxLength="150" value={contactForm.organization} onChange={(event) => setContactForm({ ...contactForm, organization: event.target.value })} /></label><label>Role<select value={contactForm.role} onChange={(event) => setContactForm({ ...contactForm, role: event.target.value })}><option value="">Select role</option><option value="student">Student</option><option value="alumnus">Alumnus</option><option value="administrator">School administrator</option><option value="event_organizer">Event organizer</option></select></label></div><label>Message *<textarea required minLength="10" maxLength="2000" rows="5" value={contactForm.message} onChange={(event) => setContactForm({ ...contactForm, message: event.target.value })} /></label><div className="public-contact-fields"><label>Preferred contact method<select value={contactForm.preferred_contact_method} onChange={(event) => setContactForm({ ...contactForm, preferred_contact_method: event.target.value })}><option value="email">Email</option><option value="phone">Phone</option></select></label><label>Phone number (optional)<input type="tel" value={contactForm.phone} onChange={(event) => setContactForm({ ...contactForm, phone: event.target.value })} placeholder="+91 98765 43210" /></label></div><label>Attachment (optional)<input type="file" accept=".pdf,image/jpeg,image/png,image/webp" onChange={(event) => setContactForm({ ...contactForm, attachment: event.target.files?.[0] || null })} /></label><label className="public-consent"><input required type="checkbox" checked={contactForm.consent} onChange={(event) => setContactForm({ ...contactForm, consent: event.target.checked })} />I agree to be contacted about this request. *</label>{contactState.message && <div className={contactState.status === 'error' ? 'public-contact-status error' : 'public-contact-status success'} role="status"><span className="public-contact-status-icon" aria-hidden="true">{contactState.status === 'error' ? '!' : '✓'}</span><span>{contactState.message}</span></div>}<button className="public-primary-button" type="submit" disabled={contactState.status === 'sending'}>{contactState.status === 'sending' ? 'Sending...' : 'Send message'} <span aria-hidden="true">↗</span></button></form></section>
-      <footer className="public-footer"><div><a className="public-brand" href="#home"><span className="public-brand-mark"><img src="/alumni-meet-mark.svg" alt="" /></span><span><strong>Alumni</strong><small>Meet</small></span></a><p>Keep the good people close.</p></div><div className="public-footer-end"><span>© 2026 Alumni Meet</span><a href="#home">Back to top ↑</a></div></footer>
+      <footer className="public-footer"><div><a className="public-brand" href="#home"><span className="public-brand-mark"><img src="/alumni-meet-mark.svg" alt="" /></span><span><strong>Alumni</strong><small>Meet</small></span></a><p>Keep the good people close.</p></div><div className="public-footer-end"><span>© 2026 Philomena’s Digital Connect</span><a href="#home">Back to top ↑</a></div></footer>
     </main>
   );
 }

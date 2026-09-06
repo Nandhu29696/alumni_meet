@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.describe('public Alumni Meet experience', () => {
+test.describe('public Philomena’s Digital Connect experience', () => {
   test('shows public navigation and routes to sign in and registration', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: /people who made you/i })).toBeVisible();

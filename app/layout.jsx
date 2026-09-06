@@ -6,8 +6,8 @@ import './public-home.css';
 import Providers from './providers';
 
 export const metadata = {
-  title: 'Alumni Meet',
-  description: 'Reconnect with classmates, discover alumni events, and grow your school community with Alumni Meet.',
+  title: 'Philomena’s Digital Connect',
+  description: 'Reconnect with classmates, discover alumni events, and grow your school community with Philomena’s Digital Connect.',
   keywords: ['alumni network', 'school alumni', 'college alumni', 'company alumni', 'community events', 'reunions'],
   metadataBase: new URL('https://alumnimeet.example'),
   icons: {
@@ -16,14 +16,14 @@ export const metadata = {
     apple: '/alumni-meet-mark.svg'
   },
   openGraph: {
-    title: 'Alumni Meet | Keep the good people close',
+    title: 'Philomena’s Digital Connect | Keep the good people close',
     description: 'A shared home for the people and places that shaped us.',
     type: 'website',
-    images: [{ url: '/alumni-meet-mark.svg', width: 128, height: 128, alt: 'Alumni Meet' }]
+    images: [{ url: '/alumni-meet-mark.svg', width: 128, height: 128, alt: 'Philomena’s Digital Connect' }]
   },
   twitter: {
     card: 'summary',
-    title: 'Alumni Meet | Keep the good people close',
+    title: 'Philomena’s Digital Connect | Keep the good people close',
     description: 'Reconnect, gather, and belong.',
     images: ['/alumni-meet-mark.svg']
   }

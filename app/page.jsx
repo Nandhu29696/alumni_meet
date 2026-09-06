@@ -170,7 +170,7 @@ export default function Home() {
     })();
   }, []);
 
-  if (publicView === null) return <main className="public-auth-loading" aria-label="Loading Alumni Meet"><span className="public-brand-mark">AM</span></main>;
+  if (publicView === null) return <main className="public-auth-loading" aria-label="Loading Philomena’s Digital Connect"><span className="public-brand-mark">AM</span></main>;
   if (publicView) return <PublicHome />;
 
   async function saveProfile(profile) {
